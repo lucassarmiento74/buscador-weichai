@@ -176,6 +176,7 @@
       justify-content:center;
       position:relative;
     }
+    .imgBox.hidden{ display:none; }
     @media (max-width: 520px){
       .cardTop{ flex-direction: column; }
       .imgBox{
@@ -190,13 +191,6 @@
       height:100%;
       object-fit: cover;
       display:block;
-    }
-    .imgPlaceholder{
-      text-align:center;
-      padding: 12px;
-      color: rgba(234,242,255,.75);
-      font-size: 12.5px;
-      line-height:1.25;
     }
 
     .content{
@@ -234,6 +228,7 @@
     .pill.diesel{ border-color: rgba(11,77,162,.55); background: rgba(11,77,162,.18); }
     .pill.gas{ border-color: rgba(230,0,18,.55); background: rgba(230,0,18,.14); }
     .pill.premium{ border-color: rgba(255,215,0,.40); background: rgba(255,215,0,.12); }
+    .pill.motor{ border-color: rgba(234,242,255,.22); background: rgba(234,242,255,.10); }
 
     .meta{
       display:grid;
@@ -270,7 +265,7 @@
       gap: 8px;
       text-decoration:none;
       user-select:none;
-      transition: transform .06s ease, filter .15s ease;
+      transition: transform .06s ease, filter .15s ease, opacity .15s ease;
       transform: translateY(0);
       white-space: nowrap;
     }
@@ -291,6 +286,14 @@
       color: var(--text);
     }
     .btn:hover{ filter: brightness(1.04); }
+
+    /* Disabled buttons (when no link / no data) */
+    .btnDisabled{
+      opacity: .45;
+      cursor: not-allowed;
+      pointer-events: none;
+      filter: grayscale(.25);
+    }
 
     .tableWrap{
       padding: 0 14px 14px;
@@ -375,7 +378,7 @@
       </div>
 
       <div class="foot">
-        Consejo práctico: si querés que los botones “Descargar” funcionen perfecto, asegurate de que los archivos de Drive estén en modo <b>“Cualquier persona con el enlace puede ver”</b>.
+        Consejo práctico: para que “Ver/Descargar” funcione perfecto, los archivos de Drive deben estar en <b>“Cualquier persona con el enlace puede ver”</b>.
       </div>
     </div>
   </div>
@@ -386,10 +389,8 @@
     // -----------------------------
     function extractDriveId(url){
       if(!url || typeof url !== "string") return null;
-      // Typical: https://drive.google.com/file/d/<ID>/view?...
       const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
       if(m && m[1]) return m[1];
-      // Sometimes share links use id=...
       const m2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
       if(m2 && m2[1]) return m2[1];
       return null;
@@ -408,12 +409,12 @@
     }
 
     // -----------------------------
-    // Data (fiel a lo que pegaste)
+    // Data
     // -----------------------------
     const CURRENCY = "USD";
 
     const PRODUCTS = [
-      // GENERADORES (Diesel)
+      // ---------------- GENERADORES ----------------
       {
         kind: "generador",
         fuel: "diesel",
@@ -429,6 +430,26 @@
           { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000622860", priceUsd:"9,09" },
           { desc:"Correa accesorios (2000 hs)", productNo:"2B0900006 / AV17X940L", priceUsd:"7,84" },
           { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1000940409", priceUsd:"70,88" },
+        ],
+        correctiveParts: [
+          { desc:"Bomba inyectora", productNo:"1003896473", priceUsd:"560,39" },
+          { desc:"Junta bomba inyectora", productNo:"1000852702", priceUsd:"1,11" },
+          { desc:"Inyector", productNo:"1015968934", priceUsd:"64,02" },
+          { desc:"Inyector", productNo:"2010924", priceUsd:"67,06" },
+          { desc:"Junta multiple escape", productNo:"1000184083", priceUsd:"2,60" },
+          { desc:"Bulon escape", productNo:"1000071147", priceUsd:"2,33" },
+          { desc:"Bomba de agua", productNo:"1002262420", priceUsd:"200,71" },
+          { desc:"Junta bomba de agua", productNo:"1000795642", priceUsd:"0,84" },
+          { desc:"Termostato", productNo:"21033-72-K/155B", priceUsd:"15,36" },
+          { desc:"Junta termostato", productNo:"1000846528", priceUsd:"0,57" },
+          { desc:"Motor de arranque", productNo:"1001538960", priceUsd:"307,06" },
+          { desc:"Alternador", productNo:"2085090110", priceUsd:"153,26" },
+          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
+          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
+          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
+          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
         ]
       },
       {
@@ -446,6 +467,26 @@
           { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000622860", priceUsd:"9,09" },
           { desc:"Correa accesorios (2000 hs)", productNo:"2B0900006 / AV17X940L", priceUsd:"7,84" },
           { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1000940409", priceUsd:"70,88" },
+        ],
+        correctiveParts: [
+          { desc:"Bomba inyectora", productNo:"1003896473", priceUsd:"560,39" },
+          { desc:"Junta bomba inyectora", productNo:"1000852702", priceUsd:"1,11" },
+          { desc:"Inyector", productNo:"1015968934", priceUsd:"64,02" },
+          { desc:"Inyector", productNo:"2010924", priceUsd:"67,06" },
+          { desc:"Junta multiple escape", productNo:"1000184083", priceUsd:"2,60" },
+          { desc:"Bulon escape", productNo:"1000071147", priceUsd:"2,33" },
+          { desc:"Bomba de agua", productNo:"1002262420", priceUsd:"200,71" },
+          { desc:"Junta bomba de agua", productNo:"1000795642", priceUsd:"0,84" },
+          { desc:"Termostato", productNo:"21033-72-K/155B", priceUsd:"15,36" },
+          { desc:"Junta termostato", productNo:"1000846528", priceUsd:"0,57" },
+          { desc:"Motor de arranque", productNo:"1001538960", priceUsd:"307,06" },
+          { desc:"Alternador", productNo:"2085090110", priceUsd:"153,26" },
+          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
+          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
+          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
+          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
         ]
       },
       {
@@ -462,6 +503,30 @@
           { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1001069804 / 13069543", priceUsd:"66,41" },
           { desc:"Correa accesorios (2000 hs)", productNo:"2B0900006 / AV17X940L", priceUsd:"7,79" },
           { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000622860", priceUsd:"9,76" },
+        ],
+        correctiveParts: [
+          { desc:"Bomba inyectora", productNo:"1005604711", priceUsd:"1.354,66" },
+          { desc:"Junta bomba inyectora", productNo:"1000852702", priceUsd:"1,11" },
+          { desc:"Inyector", productNo:"1015968934", priceUsd:"64,02" },
+          { desc:"Inyector", productNo:"2010924", priceUsd:"67,06" },
+          { desc:"Bomba de agua", productNo:"1001498790", priceUsd:"123,49" },
+          { desc:"Junta bomba de agua", productNo:"1000795642", priceUsd:"0,84" },
+          { desc:"Termostato", productNo:"21033-72-K/155B", priceUsd:"15,36" },
+          { desc:"Junta termostato", productNo:"1000846528", priceUsd:"0,57" },
+          { desc:"Alternador", productNo:"2085090110", priceUsd:"153,26" },
+          { desc:"Motor de arranque", productNo:"1001557368", priceUsd:"291,63" },
+          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
+          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
+          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
+          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
+          { desc:"Turbo", productNo:"1001836952", priceUsd:"889,79" },
+          { desc:"Bulon escape", productNo:"1000071147", priceUsd:"2,33" },
+          { desc:"Junta multiple escape", productNo:"2060008", priceUsd:"0,51" },
+          { desc:"Junta salida turbo", productNo:"1001228133", priceUsd:"4,62" },
+          { desc:"Junta turbo", productNo:"1000757316", priceUsd:"1,69" },
+          { desc:"Junta descarga turbo", productNo:"2067800", priceUsd:"0,81" },
         ]
       },
       {
@@ -478,6 +543,33 @@
           { desc:"Filtro de aceite (500 hs)", productNo:"1002084930", priceUsd:"22,70" },
           { desc:"Filtro de gasoil primario (500 hs)", productNo:"1008230153", priceUsd:"50,89" },
           { desc:"Correa accesorios (2000 hs)", productNo:"1000686462 / AV17X1032", priceUsd:"7,42" },
+        ],
+        correctiveParts: [
+          { desc:"Termostato", productNo:"1000575996", priceUsd:"10,06" },
+          { desc:"Bomba de agua", productNo:"1008352096", priceUsd:"154,98" },
+          { desc:"Junta bomba de agua", productNo:"1000795642", priceUsd:"0,84" },
+          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
+          { desc:"Sensor de fase", productNo:"Z20310003", priceUsd:"70,34" },
+          { desc:"Sensor de bba gasoil", productNo:"1000001100", priceUsd:"135,51" },
+          { desc:"Sensor de velocidad", productNo:"612630030007", priceUsd:"23,86" },
+          { desc:"Sensor de temperatura", productNo:"612630060035", priceUsd:"15,66" },
+          { desc:"Sensor presión riel", productNo:"612600081585", priceUsd:"143,84" },
+          { desc:"Sensor de presión y temperatura", productNo:"612600090460", priceUsd:"74,12" },
+          { desc:"Sensor presión y temperatura refuerzo", productNo:"Z20310004", priceUsd:"61,19" },
+          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
+          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
+          { desc:"Bomba inyectora", productNo:"1000026163", priceUsd:"772,00" },
+          { desc:"Inyector", productNo:"1000000623", priceUsd:"342,53" },
+          { desc:"Motor de arranque", productNo:"1001557368", priceUsd:"291,63" },
+          { desc:"Alternador", productNo:"1002093349", priceUsd:"303,62" },
+          { desc:"Turbo", productNo:"1001836952", priceUsd:"889,79" },
+          { desc:"Junta salida turbo", productNo:"1001228133", priceUsd:"4,62" },
+          { desc:"Junta turbo", productNo:"1000757316", priceUsd:"1,69" },
+          { desc:"Junta multiple escape", productNo:"1000184083", priceUsd:"2,60" },
+          { desc:"Junta descarga turbo", productNo:"2067800", priceUsd:"0,81" },
+          { desc:"Tuerca escape/turbo", productNo:"610800110349", priceUsd:"1,89" },
         ]
       },
       {
@@ -494,6 +586,30 @@
           { desc:"Correa accesorios (2000 hs)", productNo:"1011315507 AV17X1205 / 1000440251", priceUsd:"8,57" },
           { desc:"Filtro de aceite (500 hs)", productNo:"1002525223 /  1001555805", priceUsd:"16,45" },
           { desc:"Filtro de gasoil primario (500 hs)", productNo:"1011659326", priceUsd:"46,35" },
+        ],
+        correctiveParts: [
+          { desc:"Bomba de agua", productNo:"1004210229", priceUsd:"146,95" },
+          { desc:"Junta bomba de agua", productNo:"1000795641", priceUsd:"0,81" },
+          { desc:"Termostato", productNo:"1001538000", priceUsd:"22,31" },
+          { desc:"Junta termostato", productNo:"1009980978", priceUsd:"3,21" },
+          { desc:"Bomba inyectora", productNo:"1005276085", priceUsd:"1.679,47" },
+          { desc:"Inyector", productNo:"2105080172", priceUsd:"59,47" },
+          { desc:"Inyector", productNo:"1015968936", priceUsd:"67,47" },
+          { desc:"Junta tapa de valvula", productNo:"1001217649", priceUsd:"17,28" },
+          { desc:"Motor de arranque", productNo:"1001557368", priceUsd:"291,63" },
+          { desc:"Alternador", productNo:"1002093349", priceUsd:"303,62" },
+          { desc:"Turbo", productNo:"1001737287", priceUsd:"710,67" },
+          { desc:"Tuerca escape/turbo", productNo:"610800110349", priceUsd:"1,89" },
+          { desc:"Junta descarga turbo", productNo:"2067800", priceUsd:"0,81" },
+          { desc:"Junta salida turbo", productNo:"1001103834", priceUsd:"2,40" },
+          { desc:"Junta turbo", productNo:"W22022027A", priceUsd:"2,23" },
+          { desc:"Bulon escape", productNo:"612630110958", priceUsd:"3,51" },
+          { desc:"Junta multiple escape", productNo:"2014546", priceUsd:"1,38" },
+          { desc:"Reten delantero", productNo:"2027523", priceUsd:"4,25" },
+          { desc:"Reten trasero", productNo:"2027524", priceUsd:"8,98" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
+          { desc:"Sensor de temperatura", productNo:"1002381183", priceUsd:"47,18" },
         ]
       },
       {
@@ -512,6 +628,32 @@
           { desc:"Correa accesorios (2000 hs)", productNo:"1011315507 AV17X1205 / 1000440251", priceUsd:"6,75" },
           { desc:"Filtro de aceite (500 hs)", productNo:"1002525223 /1001555805", priceUsd:"18,09" },
           { desc:"Filtro de gasoil primario (500 hs)", productNo:"1011659326", priceUsd:"45,78" },
+        ],
+        correctiveParts: [
+          { desc:"Bomba de agua", productNo:"1004210229", priceUsd:"146,95" },
+          { desc:"Junta bomba de agua", productNo:"1000795641", priceUsd:"0,81" },
+          { desc:"Termostato", productNo:"1001538000", priceUsd:"22,31" },
+          { desc:"Junta termostato", productNo:"1009980978", priceUsd:"3,21" },
+          { desc:"Alternador", productNo:"1001560878", priceUsd:"303,62" },
+          { desc:"Motor de arranque", productNo:"1001557368", priceUsd:"291,63" },
+          { desc:"Alternador", productNo:"1002093349", priceUsd:"303,62" },
+          { desc:"Tensor de correa", productNo:"1004933136", priceUsd:"93,22" },
+          { desc:"Junta tapa de valvula", productNo:"1001217649", priceUsd:"17,28" },
+          { desc:"Bomba inyectora", productNo:"1005276085", priceUsd:"1.679,47" },
+          { desc:"Inyector", productNo:"2100235", priceUsd:"67,06" },
+          { desc:"Inyector", productNo:"1015775889", priceUsd:"67,47" },
+          { desc:"Turbo", productNo:"1001689095", priceUsd:"705,24" },
+          { desc:"Tuerca escape/turbo", productNo:"610800110349", priceUsd:"1,89" },
+          { desc:"Junta descarga turbo", productNo:"2067800", priceUsd:"0,81" },
+          { desc:"Junta salida turbo", productNo:"1001103834", priceUsd:"2,40" },
+          { desc:"Junta turbo", productNo:"W22022027A", priceUsd:"2,23" },
+          { desc:"Bulon escape", productNo:"612630110958", priceUsd:"3,51" },
+          { desc:"Junta multiple escape", productNo:"2014546", priceUsd:"1,38" },
+          { desc:"Reten delantero", productNo:"2027523", priceUsd:"4,25" },
+          { desc:"Reten trasero", productNo:"2027524", priceUsd:"8,98" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
+          { desc:"Sensor de temperatura", productNo:"1002381183", priceUsd:"47,18" },
         ]
       },
       {
@@ -530,6 +672,32 @@
           { desc:"Correa accesorios (2000 hs)", productNo:"1011315507 AV17X1205 / 1000440251", priceUsd:"6,75" },
           { desc:"Filtro de aceite (500 hs)", productNo:"1002525223 /1001555805", priceUsd:"18,09" },
           { desc:"Filtro de gasoil primario (500 hs)", productNo:"1011659326", priceUsd:"45,78" },
+        ],
+        correctiveParts: [
+          { desc:"Bomba de agua", productNo:"1004210229", priceUsd:"146,95" },
+          { desc:"Junta bomba de agua", productNo:"1000795641", priceUsd:"0,81" },
+          { desc:"Termostato", productNo:"1001538000", priceUsd:"22,31" },
+          { desc:"Junta termostato", productNo:"1009980978", priceUsd:"3,21" },
+          { desc:"Alternador", productNo:"1001560878", priceUsd:"303,62" },
+          { desc:"Motor de arranque", productNo:"1001557368", priceUsd:"291,63" },
+          { desc:"Alternador", productNo:"1002093349", priceUsd:"303,62" },
+          { desc:"Tensor de correa", productNo:"1004933136", priceUsd:"93,22" },
+          { desc:"Junta tapa de valvula", productNo:"1001217649", priceUsd:"17,28" },
+          { desc:"Bomba inyectora", productNo:"1005276085", priceUsd:"1.679,47" },
+          { desc:"Inyector", productNo:"2100235", priceUsd:"67,06" },
+          { desc:"Inyector", productNo:"1015775889", priceUsd:"67,47" },
+          { desc:"Turbo", productNo:"1001689095", priceUsd:"705,24" },
+          { desc:"Tuerca escape/turbo", productNo:"610800110349", priceUsd:"1,89" },
+          { desc:"Junta descarga turbo", productNo:"2067800", priceUsd:"0,81" },
+          { desc:"Junta salida turbo", productNo:"1001103834", priceUsd:"2,40" },
+          { desc:"Junta turbo", productNo:"W22022027A", priceUsd:"2,23" },
+          { desc:"Bulon escape", productNo:"612630110958", priceUsd:"3,51" },
+          { desc:"Junta multiple escape", productNo:"2014546", priceUsd:"1,38" },
+          { desc:"Reten delantero", productNo:"2027523", priceUsd:"4,25" },
+          { desc:"Reten trasero", productNo:"2027524", priceUsd:"8,98" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
+          { desc:"Sensor de temperatura", productNo:"1002381183", priceUsd:"47,18" },
         ]
       },
       {
@@ -547,6 +715,32 @@
           { desc:"Filtro de aceite (500 hs)", productNo:"1000942192", priceUsd:"14,97" },
           { desc:"Filtro de gasoil c/trampa de agua (500 hs)", productNo:"1000053557 / 1000632620", priceUsd:"65,25" },
           { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000816697", priceUsd:"22,77" },
+        ],
+        correctiveParts: [
+          { desc:"Bomba inyectora", productNo:"1003019031", priceUsd:"2.118,62" },
+          { desc:"Inyector", productNo:"61560080276", priceUsd:"141,58" },
+          { desc:"Turbo", productNo:"1000951730", priceUsd:"791,98" },
+          { desc:"Junta salida turbo", productNo:"612600115408", priceUsd:"5,30" },
+          { desc:"Junta descarga turbo", productNo:"612600114275", priceUsd:"0,61" },
+          { desc:"Junta descarga turbo", productNo:"612600115514", priceUsd:"1,01" },
+          { desc:"Bulon escape", productNo:"61560110104", priceUsd:"2,06" },
+          { desc:"Bulon escape", productNo:"612600110252", priceUsd:"2,80" },
+          { desc:"Bulon escape", productNo:"61560110105", priceUsd:"2,09" },
+          { desc:"Tuercaturbo", productNo:"1001867055", priceUsd:"5,47" },
+          { desc:"Junta turbo", productNo:"61560110210", priceUsd:"4,69" },
+          { desc:"Junta multiple escape", productNo:"612600114293", priceUsd:"3,21" },
+          { desc:"Junta tapa de valvula", productNo:"612600040565", priceUsd:"6,48" },
+          { desc:"Reten delantero", productNo:"61500010037", priceUsd:"18,43" },
+          { desc:"Reten trasero", productNo:"61500010100", priceUsd:"22,85" },
+          { desc:"Bomba de agua", productNo:"1001045335", priceUsd:"292,61" },
+          { desc:"Junta bomba de agua", productNo:"612600061635", priceUsd:"4,69" },
+          { desc:"Termostato", productNo:"615G00060016", priceUsd:"55,82" },
+          { desc:"Motor de arranque", productNo:"1001690858", priceUsd:"1.223,37" },
+          { desc:"Alternador", productNo:"1000884944", priceUsd:"409,62" },
+          { desc:"Tensor de correa", productNo:"612600061256", priceUsd:"172,77" },
+          { desc:"Sensor de presión", productNo:"P00000360113", priceUsd:"100,98" },
+          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
+          { desc:"Sensor de velocidad", productNo:"612600190113", priceUsd:"84,71" },
         ]
       },
       {
@@ -566,10 +760,33 @@
           { desc:"Filtro de gasoil primario (500 hs)", productNo:"1007593004 / 1000053555", priceUsd:"36,87" },
           { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"612600114890", priceUsd:"82,70" },
           { desc:"Filtro de gasoil secundario (500 hs)", productNo:"1007593006 / 1000747688", priceUsd:"40,19" },
+        ],
+        correctiveParts: [
+          { desc:"Tensor de correa", productNo:"1000694241", priceUsd:"128,18" },
+          { desc:"Bomba inyectora", productNo:"612640080039", priceUsd:"2.337,49" },
+          { desc:"Inyector", productNo:"612630090025", priceUsd:"550,90" },
+          { desc:"Turbo", productNo:"1007388622", priceUsd:"3.573,69" },
+          { desc:"Junta multiple escape", productNo:"1009664879", priceUsd:"6,55" },
+          { desc:"Junta turbo", productNo:"1001875918", priceUsd:"4,62" },
+          { desc:"Junta descarga turbo", productNo:"1001317646", priceUsd:"0,81" },
+          { desc:"Junta descarga turbo", productNo:"1006073288", priceUsd:"0,78" },
+          { desc:"Junta turbo", productNo:"1001875918", priceUsd:"4,62" },
+          { desc:"Bomba de agua", productNo:"1007602620", priceUsd:"712,26" },
+          { desc:"Termostato", productNo:"612630061126", priceUsd:"20,62" },
+          { desc:"Junta termostato", productNo:"612630060067", priceUsd:"2,94" },
+          { desc:"Alternador", productNo:"1000884973", priceUsd:"514,99" },
+          { desc:"Motor de arranque", productNo:"612630030277", priceUsd:"1.011,59" },
+          { desc:"Junta tapa de valvula", productNo:"612630040007", priceUsd:"6,85" },
+          { desc:"Reten delantero", productNo:"1002052027", priceUsd:"37,40" },
+          { desc:"Reten trasero", productNo:"1001994648", priceUsd:"45,26" },
+          { desc:"Sensor de velocidad", productNo:"612630030007", priceUsd:"23,86" },
+          { desc:"Sensor de temperatura", productNo:"612630060035", priceUsd:"15,66" },
+          { desc:"Sensor de presión y temperatura", productNo:"1001413692", priceUsd:"110,23" },
+          { desc:"Sensor presión y temperatura refuerzo", productNo:"1002870099", priceUsd:"109,45" },
         ]
       },
 
-      // GENERADOR GAS (312 kVA)
+      // ---------------- GENERADOR GAS ----------------
       {
         kind: "generador",
         fuel: "gas",
@@ -584,10 +801,31 @@
           { desc:"Correa accesorios (2000 hs)", productNo:"612630060974", priceUsd:"36,83" },
           { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"612600114890", priceUsd:"88,97" },
           { desc:"Filtro de aceite (500 hs)", productNo:"1000942196", priceUsd:"30,95" },
+        ],
+        correctiveParts: [
+          { desc:"Bobina", productNo:"612600190686", priceUsd:"267,67" },
+          { desc:"Bujias", productNo:"1000450457", priceUsd:"87,55" },
+          { desc:"Cable bujia", productNo:"612600191684", priceUsd:"159,32" },
+          { desc:"Altronic", productNo:"1000719658", priceUsd:"420,86" },
+          { desc:"Bomba de agua", productNo:"1001803757", priceUsd:"643,75" },
+          { desc:"Termostato", productNo:"612630061126", priceUsd:"20,62" },
+          { desc:"Junta termostato", productNo:"612630060067", priceUsd:"2,94" },
+          { desc:"Tensor de correa", productNo:"612630060972", priceUsd:"123,29" },
+          { desc:"Turbo", productNo:"612700190108", priceUsd:"1.737,18" },
+          { desc:"Junta multiple escape", productNo:"1009664879", priceUsd:"6,55" },
+          { desc:"Junta turbo", productNo:"61560110210", priceUsd:"4,69" },
+          { desc:"Alternador", productNo:"1000884973", priceUsd:"514,99" },
+          { desc:"Motor de arranque", productNo:"1001778863", priceUsd:"1.036,73" },
+          { desc:"Junta tapa de valvula", productNo:"612630040007", priceUsd:"6,85" },
+          { desc:"Reten delantero", productNo:"1002052027", priceUsd:"37,40" },
+          { desc:"Reten trasero", productNo:"1001994648", priceUsd:"45,26" },
+          { desc:"Sensor de fase", productNo:"410800190039", priceUsd:"57,14" },
+          { desc:"Sensor de temperatura", productNo:"612600090766", priceUsd:"134,87" },
+          { desc:"Sensor de velocidad", productNo:"612600190113", priceUsd:"84,71" },
         ]
       },
 
-      // MOTORES (sin repuestos/folleto/imagen)
+      // ---------------- MOTORES ----------------
       { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"33kVA / 30kW", productNo:"4M06G35/5", priceUsd:"5.747,11" },
       { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"50kVA / 45kW", productNo:"4M06G50/5", priceUsd:"6.483,91" },
       { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"110kVA / 100kW", productNo:"4M10G110/5", priceUsd:"9.058,48" },
@@ -601,7 +839,7 @@
     ];
 
     // -----------------------------
-    // Build dropdown options
+    // Dropdown + UI refs
     // -----------------------------
     const powerSelect = document.getElementById("powerSelect");
     const quickSearch = document.getElementById("quickSearch");
@@ -616,8 +854,6 @@
         .replace(/\s+/g, " ");
     }
 
-    // Unique "power keys" with friendly labels.
-    // Key is the potencia string itself (empty => "SIN_ESPECIFICAR").
     function getPowerKey(potencia){
       const p = (potencia || "").trim();
       return p ? p : "SIN_ESPECIFICAR";
@@ -631,7 +867,7 @@
     }
 
     function pillClass(p){
-      if(p.kind === "motor") return "diesel"; // keep blue-ish pill
+      if(p.kind === "motor") return "motor";
       if(p.fuel === "gas") return "gas";
       if(p.fuel === "premium") return "premium";
       return "diesel";
@@ -641,54 +877,60 @@
       return `${CURRENCY} ${p.priceUsd}`;
     }
 
+    // Dropdown label (menos confuso: GEN vs MOTOR)
     function optionLabel(p){
       const pot = (p.potencia || "").trim() ? p.potencia.trim() : "Sin especificar";
-      // If repeated power, model/variant clarifies:
+      const kindTag = (p.kind === "motor") ? "[MOTOR]" : "[GEN]";
+      const fuelTag = (p.kind === "motor")
+        ? ""
+        : (p.fuel === "gas" ? " GAS" : (p.fuel === "premium" ? " PREMIUM" : " DIESEL"));
       const variant = p.variant ? ` – ${p.variant}` : "";
-      const suffix = ` – ${p.productNo}${variant}`;
-      return `${pot}${suffix}`;
+      return `${kindTag}${fuelTag} ${pot} — ${p.productNo}${variant}`;
+    }
+
+    function sortByPowerThenModel(a,b){
+      const pa = getPowerKey(a.potencia);
+      const pb = getPowerKey(b.potencia);
+      if(pa === "SIN_ESPECIFICAR" && pb !== "SIN_ESPECIFICAR") return 1;
+      if(pb === "SIN_ESPECIFICAR" && pa !== "SIN_ESPECIFICAR") return -1;
+      const c = pa.localeCompare(pb, "es", { numeric:true, sensitivity:"base" });
+      if(c !== 0) return c;
+      const m = (a.productNo || "").localeCompare((b.productNo || ""), "es", { numeric:true, sensitivity:"base" });
+      if(m !== 0) return m;
+      return ((a.variant||"").localeCompare((b.variant||""), "es", { numeric:true, sensitivity:"base" }));
     }
 
     function buildDropdown(){
-      // group by power key
-      const map = new Map();
-      for(const p of PRODUCTS){
-        const k = getPowerKey(p.potencia);
-        if(!map.has(k)) map.set(k, []);
-        map.get(k).push(p);
-      }
-
-      // Sort power keys: put SIN_ESPECIFICAR last.
-      const keys = Array.from(map.keys()).sort((a,b)=>{
-        if(a === "SIN_ESPECIFICAR") return 1;
-        if(b === "SIN_ESPECIFICAR") return -1;
-        return a.localeCompare(b, "es", { numeric:true, sensitivity:"base" });
-      });
-
-      // Build select with optgroups:
       powerSelect.innerHTML = "";
+
       const optAll = document.createElement("option");
       optAll.value = "__ALL__";
-      optAll.textContent = "Todas las potencias";
+      optAll.textContent = "Todos (Generadores + Motores)";
       powerSelect.appendChild(optAll);
 
-      for(const k of keys){
-        const group = document.createElement("optgroup");
-        group.label = (k === "SIN_ESPECIFICAR") ? "Potencia sin especificar" : k;
+      const gens = PRODUCTS.filter(p => p.kind === "generador").sort(sortByPowerThenModel);
+      const motors = PRODUCTS.filter(p => p.kind === "motor").sort(sortByPowerThenModel);
 
-        const items = map.get(k);
-
-        // If only one item for that power, show simple label
-        // If multiple, each option uses "potencia – model"
-        for(const item of items){
-          const opt = document.createElement("option");
-          opt.value = `${k}|||${item.productNo}|||${item.variant || ""}|||${item.kind}`;
-          opt.textContent = optionLabel(item);
-          group.appendChild(opt);
-        }
-
-        powerSelect.appendChild(group);
+      const ogGen = document.createElement("optgroup");
+      ogGen.label = "GENERADORES";
+      for(const p of gens){
+        const opt = document.createElement("option");
+        opt.value = `${getPowerKey(p.potencia)}|||${p.productNo}|||${p.variant || ""}|||${p.kind}`;
+        opt.textContent = optionLabel(p);
+        ogGen.appendChild(opt);
       }
+
+      const ogMot = document.createElement("optgroup");
+      ogMot.label = "MOTORES";
+      for(const p of motors){
+        const opt = document.createElement("option");
+        opt.value = `${getPowerKey(p.potencia)}|||${p.productNo}|||${p.variant || ""}|||${p.kind}`;
+        opt.textContent = optionLabel(p);
+        ogMot.appendChild(opt);
+      }
+
+      powerSelect.appendChild(ogGen);
+      powerSelect.appendChild(ogMot);
     }
 
     // -----------------------------
@@ -700,7 +942,6 @@
 
       let filtered = [...PRODUCTS];
 
-      // Filter by select:
       if(selected && selected !== "__ALL__"){
         const [k, productNo, variant, kind] = selected.split("|||");
         filtered = filtered.filter(p => {
@@ -710,7 +951,6 @@
         });
       }
 
-      // Quick search:
       if(q){
         filtered = filtered.filter(p => {
           const hay = [
@@ -743,6 +983,7 @@
       const imgBox = document.createElement("div");
       imgBox.className = "imgBox";
 
+      // --- Imagen: si no hay o falla, NO mostrar zócalo/mensaje (se oculta)
       const hasPhoto = !!(p.photoUrl && p.photoUrl.trim());
       if(hasPhoto){
         const img = document.createElement("img");
@@ -750,11 +991,12 @@
         img.src = driveViewUrl(p.photoUrl);
         img.loading = "lazy";
         img.onerror = () => {
-          imgBox.innerHTML = `<div class="imgPlaceholder">No se pudo cargar la imagen.<br/>Revisá permisos de Drive.</div>`;
+          // Ocultar completamente para no "ensuciar" la ficha
+          imgBox.classList.add("hidden");
         };
         imgBox.appendChild(img);
       } else {
-        imgBox.innerHTML = `<div class="imgPlaceholder">Sin foto cargada<br/>para este producto</div>`;
+        imgBox.classList.add("hidden");
       }
 
       const content = document.createElement("div");
@@ -781,7 +1023,7 @@
       const potenciaTxt = (p.potencia && p.potencia.trim()) ? p.potencia.trim() : "Sin especificar";
       meta.innerHTML = `
         <div><b>Potencia:</b> ${potenciaTxt}</div>
-        <div><b>Modelo:</b> ${p.productNo}</div>
+        <div><b>Modelo:</b> ${escapeHtml(p.productNo)}</div>
         <div><b>Precio:</b> ${priceText(p)}</div>
         <div><b>Tipo:</b> ${p.kind === "motor" ? "Motor" : "Generador"}</div>
       `;
@@ -789,73 +1031,116 @@
       content.appendChild(titleRow);
       content.appendChild(meta);
 
-      top.appendChild(imgBox);
+      // Si no hay imagen, el top queda solo con contenido (más prolijo)
+      if(!imgBox.classList.contains("hidden")) top.appendChild(imgBox);
       top.appendChild(content);
 
       const actions = document.createElement("div");
       actions.className = "actions";
 
-      // Photo actions
+      // --- Botones siempre presentes (pero deshabilitados si no aplica)
+      // FOTO
+      const viewImg = document.createElement("a");
+      viewImg.className = "btn btnGhost";
+      viewImg.textContent = "Ver foto";
       if(hasPhoto){
-        const viewImg = document.createElement("a");
-        viewImg.className = "btn btnGhost";
         viewImg.href = p.photoUrl;
         viewImg.target = "_blank";
         viewImg.rel = "noopener noreferrer";
-        viewImg.textContent = "Ver foto";
+      } else {
+        viewImg.classList.add("btnDisabled");
+        viewImg.title = "Sin foto cargada";
+        viewImg.href = "javascript:void(0)";
+      }
 
-        const dlImg = document.createElement("a");
-        dlImg.className = "btn btnBlue";
+      const dlImg = document.createElement("a");
+      dlImg.className = "btn btnBlue";
+      dlImg.textContent = "Descargar foto";
+      if(hasPhoto){
         dlImg.href = driveDownloadUrl(p.photoUrl);
         dlImg.target = "_blank";
         dlImg.rel = "noopener noreferrer";
-        dlImg.textContent = "Descargar foto";
-
-        actions.appendChild(viewImg);
-        actions.appendChild(dlImg);
+      } else {
+        dlImg.classList.add("btnDisabled");
+        dlImg.title = "Sin foto cargada";
+        dlImg.href = "javascript:void(0)";
       }
 
-      // Brochure actions (only if exists)
+      // FOLLETO
       const hasBrochure = !!(p.brochureUrl && p.brochureUrl.trim());
+      const dlBro = document.createElement("a");
+      dlBro.className = "btn btnPrimary";
+      dlBro.textContent = "Descargar folleto";
       if(hasBrochure){
-        const dlBro = document.createElement("a");
-        dlBro.className = "btn btnPrimary";
         dlBro.href = driveDownloadUrl(p.brochureUrl);
         dlBro.target = "_blank";
         dlBro.rel = "noopener noreferrer";
-        dlBro.textContent = "Descargar folleto";
-        actions.appendChild(dlBro);
+      } else {
+        dlBro.classList.add("btnDisabled");
+        dlBro.title = "Sin folleto cargado";
+        dlBro.href = "javascript:void(0)";
       }
 
-      // Preventive parts button (only for products that have preventiveParts)
-      const hasPreventive = Array.isArray(p.preventiveParts) && p.preventiveParts.length > 0;
-      const tableWrap = document.createElement("div");
-      tableWrap.className = "tableWrap";
+      actions.appendChild(viewImg);
+      actions.appendChild(dlImg);
+      actions.appendChild(dlBro);
 
+      // REPUESTOS (Preventivos + Correctivos)
+      const hasPreventive = Array.isArray(p.preventiveParts) && p.preventiveParts.length > 0;
+      const hasCorrective = Array.isArray(p.correctiveParts) && p.correctiveParts.length > 0;
+
+      const prevWrap = document.createElement("div");
+      prevWrap.className = "tableWrap";
+
+      const corrWrap = document.createElement("div");
+      corrWrap.className = "tableWrap";
+
+      const btnPrev = document.createElement("button");
+      btnPrev.className = "btn btnGhost";
+      btnPrev.type = "button";
+      btnPrev.textContent = "Repuestos preventivos";
       if(hasPreventive){
-        const btnPrev = document.createElement("button");
-        btnPrev.className = "btn btnGhost";
-        btnPrev.type = "button";
-        btnPrev.textContent = "Repuestos preventivos";
         btnPrev.onclick = () => {
-          tableWrap.classList.toggle("open");
-          btnPrev.textContent = tableWrap.classList.contains("open")
+          prevWrap.classList.toggle("open");
+          btnPrev.textContent = prevWrap.classList.contains("open")
             ? "Ocultar repuestos preventivos"
             : "Repuestos preventivos";
         };
-        actions.appendChild(btnPrev);
-
-        tableWrap.appendChild(buildPreventiveTable(p.preventiveParts));
+        prevWrap.appendChild(buildPartsTable(p.preventiveParts));
+      } else {
+        btnPrev.classList.add("btnDisabled");
+        btnPrev.title = "Sin repuestos preventivos";
       }
 
+      const btnCorr = document.createElement("button");
+      btnCorr.className = "btn btnGhost";
+      btnCorr.type = "button";
+      btnCorr.textContent = "Repuestos correctivos";
+      if(hasCorrective){
+        btnCorr.onclick = () => {
+          corrWrap.classList.toggle("open");
+          btnCorr.textContent = corrWrap.classList.contains("open")
+            ? "Ocultar repuestos correctivos"
+            : "Repuestos correctivos";
+        };
+        corrWrap.appendChild(buildPartsTable(p.correctiveParts));
+      } else {
+        btnCorr.classList.add("btnDisabled");
+        btnCorr.title = "Sin repuestos correctivos";
+      }
+
+      actions.appendChild(btnPrev);
+      actions.appendChild(btnCorr);
+
       card.appendChild(top);
-      if(actions.childNodes.length) card.appendChild(actions);
-      if(hasPreventive) card.appendChild(tableWrap);
+      card.appendChild(actions);
+      if(hasPreventive) card.appendChild(prevWrap);
+      if(hasCorrective) card.appendChild(corrWrap);
 
       return card;
     }
 
-    function buildPreventiveTable(items){
+    function buildPartsTable(items){
       const table = document.createElement("table");
 
       const thead = document.createElement("thead");
@@ -900,9 +1185,10 @@
 
     powerSelect.addEventListener("change", render);
     quickSearch.addEventListener("input", () => {
-      // Small debounce-ish: render on next frame to keep it snappy
       window.requestAnimationFrame(render);
     });
   </script>
 </body>
 </html>
+
+
