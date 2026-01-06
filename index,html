@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buscador Weichai – Generadores y Motores</title>
+  <style>
+    :root{
+      /* Paleta inspirada en Weichai (azul + rojo) */
+      --w-blue-900:#082E5A;
+      --w-blue-800:#0A3B73;
+      --w-blue-700:#0B4DA2;
+      --w-blue-600:#1662C4;
+      --w-blue-100:#EAF2FF;
+
+      --w-red-600:#E60012;
+
+      --bg:#071B33;
+      --card:#0B2547;
+      --card-2:#0E2D56;
+      --border:rgba(255,255,255,.10);
+      --text:#EAF2FF;
+      --muted:rgba(234,242,255,.75);
+
+      --shadow: 0 14px 34px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(11,77,162,.55), transparent 60%),
+        radial-gradient(900px 600px at 110% 10%, rgba(230,0,18,.20), transparent 55%),
+        linear-gradient(180deg, #041226 0%, #061a34 40%, #041226 100%);
+      min-height:100vh;
+    }
+
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 22px 16px 34px;
+    }
+
+    .header{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      padding: 14px 14px 8px;
+    }
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      min-width: 240px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      width:max-content;
+      padding:7px 10px;
+      border-radius:999px;
+      background: rgba(11,77,162,.18);
+      border:1px solid rgba(11,77,162,.35);
+      color: var(--text);
+      font-weight: 650;
+      letter-spacing:.2px;
+      font-size: 12.5px;
+    }
+    .dot{
+      width:10px;height:10px;border-radius:50%;
+      background: var(--w-red-600);
+      box-shadow: 0 0 0 4px rgba(230,0,18,.15);
+    }
+    h1{
+      margin: 0;
+      font-size: clamp(18px, 2.3vw, 26px);
+      letter-spacing:.2px;
+    }
+    .sub{
+      margin:0;
+      color: var(--muted);
+      font-size: 13.5px;
+      line-height:1.4;
+    }
+
+    .panel{
+      margin-top: 10px;
+      background: rgba(11,37,71,.65);
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .controls{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      padding: 14px;
+      background: linear-gradient(180deg, rgba(14,45,86,.92), rgba(11,37,71,.65));
+      border-bottom:1px solid var(--border);
+    }
+    @media (max-width: 720px){
+      .controls{ grid-template-columns: 1fr; }
+    }
+
+    label{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing:.2px;
+    }
+
+    .select, .search{
+      width:100%;
+      border-radius: 14px;
+      border:1px solid rgba(234,242,255,.22);
+      background: rgba(234,242,255,.95);
+      color: #071B33;
+      padding: 12px 12px;
+      font-size: 14px;
+      outline:none;
+    }
+    .select:focus, .search:focus{
+      border-color: rgba(230,0,18,.65);
+      box-shadow: 0 0 0 4px rgba(230,0,18,.16);
+    }
+
+    .hint{
+      padding: 0 14px 14px;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height:1.45;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      padding: 14px;
+    }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(14,45,86,.92), rgba(11,37,71,.8));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+    }
+    .cardTop{
+      display:flex;
+      gap: 12px;
+      padding: 14px;
+      align-items: stretch;
+    }
+    .imgBox{
+      width: 150px;
+      min-width: 150px;
+      height: 120px;
+      border-radius: 14px;
+      overflow:hidden;
+      background: rgba(234,242,255,.08);
+      border:1px solid rgba(234,242,255,.14);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+    }
+    @media (max-width: 520px){
+      .cardTop{ flex-direction: column; }
+      .imgBox{
+        width:100%;
+        min-width: unset;
+        height: 190px;
+      }
+    }
+
+    .imgBox img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+    .imgPlaceholder{
+      text-align:center;
+      padding: 12px;
+      color: rgba(234,242,255,.75);
+      font-size: 12.5px;
+      line-height:1.25;
+    }
+
+    .content{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      min-width: 0;
+    }
+    .titleRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .title{
+      margin:0;
+      font-size: 16px;
+      line-height:1.2;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 6px 10px;
+      border-radius:999px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing:.2px;
+      border:1px solid rgba(234,242,255,.16);
+      background: rgba(234,242,255,.08);
+      color: var(--text);
+      white-space:nowrap;
+    }
+    .pill.diesel{ border-color: rgba(11,77,162,.55); background: rgba(11,77,162,.18); }
+    .pill.gas{ border-color: rgba(230,0,18,.55); background: rgba(230,0,18,.14); }
+    .pill.premium{ border-color: rgba(255,215,0,.40); background: rgba(255,215,0,.12); }
+
+    .meta{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .meta b{ color: var(--text); font-weight: 700; }
+    @media (max-width: 520px){
+      .meta{ grid-template-columns: 1fr; }
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 10px;
+      padding: 0 14px 14px;
+      align-items:center;
+    }
+
+    .btn{
+      appearance:none;
+      border: none;
+      cursor:pointer;
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-weight: 750;
+      font-size: 13px;
+      letter-spacing:.15px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap: 8px;
+      text-decoration:none;
+      user-select:none;
+      transition: transform .06s ease, filter .15s ease;
+      transform: translateY(0);
+      white-space: nowrap;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btnPrimary{
+      background: linear-gradient(180deg, var(--w-red-600), #B8000E);
+      color:#fff;
+      box-shadow: 0 10px 24px rgba(230,0,18,.22);
+    }
+    .btnBlue{
+      background: linear-gradient(180deg, var(--w-blue-700), var(--w-blue-800));
+      color:#fff;
+      box-shadow: 0 10px 24px rgba(11,77,162,.20);
+    }
+    .btnGhost{
+      background: rgba(234,242,255,.10);
+      border:1px solid rgba(234,242,255,.18);
+      color: var(--text);
+    }
+    .btn:hover{ filter: brightness(1.04); }
+
+    .tableWrap{
+      padding: 0 14px 14px;
+      display:none;
+    }
+    .tableWrap.open{ display:block; }
+
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius: 14px;
+      border:1px solid rgba(234,242,255,.12);
+      background: rgba(4,18,38,.55);
+    }
+    th, td{
+      padding: 10px 10px;
+      text-align:left;
+      font-size: 13px;
+      border-bottom:1px solid rgba(234,242,255,.08);
+      vertical-align:top;
+    }
+    th{
+      color: rgba(234,242,255,.92);
+      background: rgba(11,77,162,.18);
+      border-bottom:1px solid rgba(234,242,255,.12);
+      font-size: 12.5px;
+      letter-spacing:.2px;
+    }
+    tr:last-child td{ border-bottom:none; }
+    td{
+      color: rgba(234,242,255,.86);
+    }
+    .foot{
+      padding: 12px 14px 16px;
+      color: rgba(234,242,255,.65);
+      font-size: 12px;
+      border-top:1px solid var(--border);
+      background: rgba(7,27,51,.35);
+    }
+
+    .empty{
+      padding: 24px 14px 28px;
+      color: rgba(234,242,255,.78);
+      text-align:center;
+      font-size: 14px;
+    }
+    .empty b{ color:#fff; }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div class="brand">
+        <div class="badge"><span class="dot"></span> Catálogo interno (USD) – Weichai</div>
+        <h1>Buscador por potencia – Generadores y Motores</h1>
+        <p class="sub">Elegí una potencia. Si hay potencias repetidas, vas a ver el modelo/variante para evitar confusiones (ej: 22 y 110).</p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="controls">
+        <div>
+          <label for="powerSelect">Potencia</label>
+          <select id="powerSelect" class="select"></select>
+        </div>
+        <div>
+          <label for="quickSearch">Búsqueda rápida (opcional)</label>
+          <input id="quickSearch" class="search" type="text" placeholder="Ej: WPG55L1, 70KVA, motor, premium..." />
+        </div>
+      </div>
+      <div class="hint">
+        • Los <b>motores</b> no tienen repuestos/folleto/imagen (por ahora).<br/>
+        • El generador <b>312 kVA</b> está marcado como <b>GAS</b> (los demás generadores: diésel / premium).
+      </div>
+
+      <div id="results" class="grid"></div>
+      <div id="empty" class="empty" style="display:none;">
+        No encontré resultados con esos filtros. Probá limpiar la búsqueda rápida o elegir otra potencia.
+      </div>
+
+      <div class="foot">
+        Consejo práctico: si querés que los botones “Descargar” funcionen perfecto, asegurate de que los archivos de Drive estén en modo <b>“Cualquier persona con el enlace puede ver”</b>.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // -----------------------------
+    // Helpers: Google Drive links
+    // -----------------------------
+    function extractDriveId(url){
+      if(!url || typeof url !== "string") return null;
+      // Typical: https://drive.google.com/file/d/<ID>/view?...
+      const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if(m && m[1]) return m[1];
+      // Sometimes share links use id=...
+      const m2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if(m2 && m2[1]) return m2[1];
+      return null;
+    }
+
+    function driveViewUrl(url){
+      const id = extractDriveId(url);
+      if(!id) return url;
+      return `https://drive.google.com/uc?export=view&id=${id}`;
+    }
+
+    function driveDownloadUrl(url){
+      const id = extractDriveId(url);
+      if(!id) return url;
+      return `https://drive.google.com/uc?export=download&id=${id}`;
+    }
+
+    // -----------------------------
+    // Data (fiel a lo que pegaste)
+    // -----------------------------
+    const CURRENCY = "USD";
+
+    const PRODUCTS = [
+      // GENERADORES (Diesel)
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR CABINADO",
+        potencia: "22KVA/18KW",
+        productNo: "WPG22L1",
+        priceUsd: "13.684,01",
+        brochureUrl: "https://drive.google.com/file/d/1Fu0HCP_qpFG3PLb8NPpsvB4Bc_v9JpX7/view?usp=drive_link",
+        photoUrl: "",
+        preventiveParts: [
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002525224", priceUsd:"27,44" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002003753", priceUsd:"31,73" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000622860", priceUsd:"9,09" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"2B0900006 / AV17X940L", priceUsd:"7,84" },
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1000940409", priceUsd:"70,88" },
+        ]
+      },
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR CABINADO",
+        potencia: "22KVA/18KW",
+        productNo: "WPG22F1",
+        priceUsd: "10.059,68",
+        brochureUrl: "https://drive.google.com/file/d/1Fu0HCP_qpFG3PLb8NPpsvB4Bc_v9JpX7/view?usp=drive_link",
+        photoUrl: "",
+        preventiveParts: [
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002525224", priceUsd:"27,44" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002003753", priceUsd:"31,73" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000622860", priceUsd:"9,09" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"2B0900006 / AV17X940L", priceUsd:"7,84" },
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1000940409", priceUsd:"70,88" },
+        ]
+      },
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR CABINADO",
+        potencia: "41KVA / 33KW",
+        productNo: "WPG41L1",
+        priceUsd: "15.851,24",
+        brochureUrl: "https://drive.google.com/file/d/1BkwfIoCqncz4yidg7bvvH9lURYkg7eyo/view?usp=drive_link",
+        photoUrl: "https://drive.google.com/file/d/1MkY6AUN_ls-4CPaVfJ-vumhrkPxGccQA/view?usp=drive_link",
+        preventiveParts: [
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002003753", priceUsd:"29,01" },
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1001069804 / 13069543", priceUsd:"66,41" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"2B0900006 / AV17X940L", priceUsd:"7,79" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000622860", priceUsd:"9,76" },
+        ]
+      },
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR CABINADO",
+        potencia: "55KVA / 44KW",
+        productNo: "WPG55L1",
+        priceUsd: "16.470,74",
+        brochureUrl: "https://drive.google.com/file/d/1QopodZz0JGrYKJscZhSEdM6vBCz4wkZs/view?usp=drive_link",
+        photoUrl: "https://drive.google.com/file/d/1JkPPFYKiTAqE-ADcoW7Yv06Wq8Bwq4u1/view?usp=drive_link",
+        preventiveParts: [
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1001069804 / 13069543", priceUsd:"69,04" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002084930", priceUsd:"22,70" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1008230153", priceUsd:"50,89" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"1000686462 / AV17X1032", priceUsd:"7,42" },
+        ]
+      },
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR CABINADO",
+        potencia: "70KVA / 55KW",
+        productNo: "WPG70L1",
+        priceUsd: "18.546,07",
+        brochureUrl: "https://drive.google.com/file/d/1o3Y0IXATo_udBfwc9UHwgDrFTEHAM_5B/view?usp=drive_link",
+        photoUrl: "https://drive.google.com/file/d/1HA02gURsQdcA1IUiXiXsU1p_8Sv7FaA-/view?usp=drive_link",
+        preventiveParts: [
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1001069804 / 13069543", priceUsd:"61,50" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"1011315507 AV17X1205 / 1000440251", priceUsd:"8,57" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002525223 /  1001555805", priceUsd:"16,45" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1011659326", priceUsd:"46,35" },
+        ]
+      },
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR CABINADO",
+        potencia: "110kVA / 88kW",
+        productNo: "WPG110L1",
+        variant: "Standard",
+        priceUsd: "23.152,73",
+        brochureUrl: "https://drive.google.com/file/d/1Wf6634neuJGYfdHXx2EQZwwp_h9PnE2B/view?usp=drive_link",
+        photoUrl: "https://drive.google.com/file/d/12tIsTuddCvN9GA6svsvQ1z1u5656exRX/view?usp=drive_link",
+        preventiveParts: [
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1001069804 / 13069543", priceUsd:"69,04" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"1005913470 / 8PK1347", priceUsd:"17,61" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"1011315507 AV17X1205 / 1000440251", priceUsd:"6,75" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002525223 /1001555805", priceUsd:"18,09" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1011659326", priceUsd:"45,78" },
+        ]
+      },
+      {
+        kind: "generador",
+        fuel: "premium",
+        description: "GENERADORES DIESEL CAB. PREMIUM",
+        potencia: "110kVA / 88kW",
+        productNo: "WPG110L1",
+        variant: "Premium",
+        priceUsd: "31.711,15",
+        brochureUrl: "https://drive.google.com/file/d/1Wf6634neuJGYfdHXx2EQZwwp_h9PnE2B/view?usp=drive_link",
+        photoUrl: "https://drive.google.com/file/d/1CugpJ3C-hVjdoSZff1mmmaZ9sGsqC1LK/view?usp=drive_link",
+        preventiveParts: [
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1001069804 / 13069543", priceUsd:"69,04" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"1005913470 / 8PK1347", priceUsd:"17,61" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"1011315507 AV17X1205 / 1000440251", priceUsd:"6,75" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002525223 /1001555805", priceUsd:"18,09" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1011659326", priceUsd:"45,78" },
+        ]
+      },
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR CABINADO",
+        potencia: "275kVA / 220kW",
+        productNo: "WPG275L8",
+        priceUsd: "43.639,96",
+        brochureUrl: "https://drive.google.com/file/d/1ykvSRfz_qApLX30Pu7s6NMF-fga8jylM/view?usp=drive_link",
+        photoUrl: "https://drive.google.com/file/d/1yo03Ug_vlzKflqIS6DelUKHTw0dEtIai/view?usp=drive_link",
+        preventiveParts: [
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"612600114890", priceUsd:"90,96" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"61260006136", priceUsd:"37,04" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1000942192", priceUsd:"14,97" },
+          { desc:"Filtro de gasoil c/trampa de agua (500 hs)", productNo:"1000053557 / 1000632620", priceUsd:"65,25" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000816697", priceUsd:"22,77" },
+        ]
+      },
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR CABINADO",
+        potencia: "550KVA / 440KW",
+        productNo: "WPG550L8",
+        priceUsd: "84.297,66",
+        brochureUrl: "https://drive.google.com/file/d/1kUJGi8n4HPohxhzVnslyGPqCzh1fiV3o/view?usp=drive_link",
+        photoUrl: "https://drive.google.com/file/d/1fAvwWl8hsw1c4hYRpJMOqM3_F8BeJMnt/view?usp=drive_link",
+        preventiveParts: [
+          { desc:"Correa accesorios (2000 hs)", productNo:"1004351542", priceUsd:"50,15" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"1000578844", priceUsd:"53,47" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1007593009 / 1000428205", priceUsd:"34,46" },
+          { desc:"Filtro de gasoil c/trampa de agua (500 hs)", productNo:"1007593016 / 1000053557 / 1000632620", priceUsd:"46,00" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1007593004 / 1000053555", priceUsd:"36,87" },
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"612600114890", priceUsd:"82,70" },
+          { desc:"Filtro de gasoil secundario (500 hs)", productNo:"1007593006 / 1000747688", priceUsd:"40,19" },
+        ]
+      },
+
+      // GENERADOR GAS (312 kVA)
+      {
+        kind: "generador",
+        fuel: "gas",
+        description: "GENERADORES A GAS",
+        potencia: "312KVA/250KW",
+        productNo: "WPG312L8NG",
+        priceUsd: "125.512,08",
+        brochureUrl: "",
+        photoUrl: "",
+        preventiveParts: [
+          { desc:"Correa accesorios (2000 hs)", productNo:"612700060040", priceUsd:"22,43" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"612630060974", priceUsd:"36,83" },
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"612600114890", priceUsd:"88,97" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1000942196", priceUsd:"30,95" },
+        ]
+      },
+
+      // MOTORES (sin repuestos/folleto/imagen)
+      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"33kVA / 30kW", productNo:"4M06G35/5", priceUsd:"5.747,11" },
+      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"50kVA / 45kW", productNo:"4M06G50/5", priceUsd:"6.483,91" },
+      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"110kVA / 100kW", productNo:"4M10G110/5", priceUsd:"9.058,48" },
+      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"", productNo:"WD10G220E23", priceUsd:"19.895,94" },
+      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"", productNo:"WP6G125E22", priceUsd:"8.646,27" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"25 KW", productNo:"4M06G20/5", priceUsd:"4.623,97" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"66 KW", productNo:"4M10G70/5", priceUsd:"6.553,80" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"264 KW", productNo:"6M16G275/5", priceUsd:"18.406,69" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"499 KW", productNo:"6M21G550/5", priceUsd:"33.279,68" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"70 KW/94 HP", productNo:"4M10V4D0", priceUsd:"10.063,17" },
+    ];
+
+    // -----------------------------
+    // Build dropdown options
+    // -----------------------------
+    const powerSelect = document.getElementById("powerSelect");
+    const quickSearch = document.getElementById("quickSearch");
+    const resultsEl = document.getElementById("results");
+    const emptyEl = document.getElementById("empty");
+
+    function normalize(s){
+      return (s || "")
+        .toString()
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, " ");
+    }
+
+    // Unique "power keys" with friendly labels.
+    // Key is the potencia string itself (empty => "SIN_ESPECIFICAR").
+    function getPowerKey(potencia){
+      const p = (potencia || "").trim();
+      return p ? p : "SIN_ESPECIFICAR";
+    }
+
+    function fuelLabel(p){
+      if(p.kind === "motor") return "Motor";
+      if(p.fuel === "gas") return "Gas";
+      if(p.fuel === "premium") return "Premium";
+      return "Diesel";
+    }
+
+    function pillClass(p){
+      if(p.kind === "motor") return "diesel"; // keep blue-ish pill
+      if(p.fuel === "gas") return "gas";
+      if(p.fuel === "premium") return "premium";
+      return "diesel";
+    }
+
+    function priceText(p){
+      return `${CURRENCY} ${p.priceUsd}`;
+    }
+
+    function optionLabel(p){
+      const pot = (p.potencia || "").trim() ? p.potencia.trim() : "Sin especificar";
+      // If repeated power, model/variant clarifies:
+      const variant = p.variant ? ` – ${p.variant}` : "";
+      const suffix = ` – ${p.productNo}${variant}`;
+      return `${pot}${suffix}`;
+    }
+
+    function buildDropdown(){
+      // group by power key
+      const map = new Map();
+      for(const p of PRODUCTS){
+        const k = getPowerKey(p.potencia);
+        if(!map.has(k)) map.set(k, []);
+        map.get(k).push(p);
+      }
+
+      // Sort power keys: put SIN_ESPECIFICAR last.
+      const keys = Array.from(map.keys()).sort((a,b)=>{
+        if(a === "SIN_ESPECIFICAR") return 1;
+        if(b === "SIN_ESPECIFICAR") return -1;
+        return a.localeCompare(b, "es", { numeric:true, sensitivity:"base" });
+      });
+
+      // Build select with optgroups:
+      powerSelect.innerHTML = "";
+      const optAll = document.createElement("option");
+      optAll.value = "__ALL__";
+      optAll.textContent = "Todas las potencias";
+      powerSelect.appendChild(optAll);
+
+      for(const k of keys){
+        const group = document.createElement("optgroup");
+        group.label = (k === "SIN_ESPECIFICAR") ? "Potencia sin especificar" : k;
+
+        const items = map.get(k);
+
+        // If only one item for that power, show simple label
+        // If multiple, each option uses "potencia – model"
+        for(const item of items){
+          const opt = document.createElement("option");
+          opt.value = `${k}|||${item.productNo}|||${item.variant || ""}|||${item.kind}`;
+          opt.textContent = optionLabel(item);
+          group.appendChild(opt);
+        }
+
+        powerSelect.appendChild(group);
+      }
+    }
+
+    // -----------------------------
+    // Rendering
+    // -----------------------------
+    function render(){
+      const selected = powerSelect.value;
+      const q = normalize(quickSearch.value);
+
+      let filtered = [...PRODUCTS];
+
+      // Filter by select:
+      if(selected && selected !== "__ALL__"){
+        const [k, productNo, variant, kind] = selected.split("|||");
+        filtered = filtered.filter(p => {
+          const pk = getPowerKey(p.potencia);
+          const pv = (p.variant || "");
+          return pk === k && p.productNo === productNo && pv === variant && p.kind === kind;
+        });
+      }
+
+      // Quick search:
+      if(q){
+        filtered = filtered.filter(p => {
+          const hay = [
+            p.kind,
+            p.description,
+            p.potencia,
+            p.productNo,
+            p.variant,
+            p.fuel
+          ].map(normalize).join(" | ");
+          return hay.includes(q);
+        });
+      }
+
+      resultsEl.innerHTML = "";
+      emptyEl.style.display = filtered.length ? "none" : "block";
+
+      for(const p of filtered){
+        resultsEl.appendChild(buildCard(p));
+      }
+    }
+
+    function buildCard(p){
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const top = document.createElement("div");
+      top.className = "cardTop";
+
+      const imgBox = document.createElement("div");
+      imgBox.className = "imgBox";
+
+      const hasPhoto = !!(p.photoUrl && p.photoUrl.trim());
+      if(hasPhoto){
+        const img = document.createElement("img");
+        img.alt = `${p.description} ${p.productNo}`;
+        img.src = driveViewUrl(p.photoUrl);
+        img.loading = "lazy";
+        img.onerror = () => {
+          imgBox.innerHTML = `<div class="imgPlaceholder">No se pudo cargar la imagen.<br/>Revisá permisos de Drive.</div>`;
+        };
+        imgBox.appendChild(img);
+      } else {
+        imgBox.innerHTML = `<div class="imgPlaceholder">Sin foto cargada<br/>para este producto</div>`;
+      }
+
+      const content = document.createElement("div");
+      content.className = "content";
+
+      const titleRow = document.createElement("div");
+      titleRow.className = "titleRow";
+
+      const title = document.createElement("h3");
+      title.className = "title";
+      const variant = p.variant ? ` (${p.variant})` : "";
+      title.textContent = `${p.description}${variant}`;
+
+      const pill = document.createElement("div");
+      pill.className = `pill ${pillClass(p)}`;
+      pill.textContent = fuelLabel(p);
+
+      titleRow.appendChild(title);
+      titleRow.appendChild(pill);
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+
+      const potenciaTxt = (p.potencia && p.potencia.trim()) ? p.potencia.trim() : "Sin especificar";
+      meta.innerHTML = `
+        <div><b>Potencia:</b> ${potenciaTxt}</div>
+        <div><b>Modelo:</b> ${p.productNo}</div>
+        <div><b>Precio:</b> ${priceText(p)}</div>
+        <div><b>Tipo:</b> ${p.kind === "motor" ? "Motor" : "Generador"}</div>
+      `;
+
+      content.appendChild(titleRow);
+      content.appendChild(meta);
+
+      top.appendChild(imgBox);
+      top.appendChild(content);
+
+      const actions = document.createElement("div");
+      actions.className = "actions";
+
+      // Photo actions
+      if(hasPhoto){
+        const viewImg = document.createElement("a");
+        viewImg.className = "btn btnGhost";
+        viewImg.href = p.photoUrl;
+        viewImg.target = "_blank";
+        viewImg.rel = "noopener noreferrer";
+        viewImg.textContent = "Ver foto";
+
+        const dlImg = document.createElement("a");
+        dlImg.className = "btn btnBlue";
+        dlImg.href = driveDownloadUrl(p.photoUrl);
+        dlImg.target = "_blank";
+        dlImg.rel = "noopener noreferrer";
+        dlImg.textContent = "Descargar foto";
+
+        actions.appendChild(viewImg);
+        actions.appendChild(dlImg);
+      }
+
+      // Brochure actions (only if exists)
+      const hasBrochure = !!(p.brochureUrl && p.brochureUrl.trim());
+      if(hasBrochure){
+        const dlBro = document.createElement("a");
+        dlBro.className = "btn btnPrimary";
+        dlBro.href = driveDownloadUrl(p.brochureUrl);
+        dlBro.target = "_blank";
+        dlBro.rel = "noopener noreferrer";
+        dlBro.textContent = "Descargar folleto";
+        actions.appendChild(dlBro);
+      }
+
+      // Preventive parts button (only for products that have preventiveParts)
+      const hasPreventive = Array.isArray(p.preventiveParts) && p.preventiveParts.length > 0;
+      const tableWrap = document.createElement("div");
+      tableWrap.className = "tableWrap";
+
+      if(hasPreventive){
+        const btnPrev = document.createElement("button");
+        btnPrev.className = "btn btnGhost";
+        btnPrev.type = "button";
+        btnPrev.textContent = "Repuestos preventivos";
+        btnPrev.onclick = () => {
+          tableWrap.classList.toggle("open");
+          btnPrev.textContent = tableWrap.classList.contains("open")
+            ? "Ocultar repuestos preventivos"
+            : "Repuestos preventivos";
+        };
+        actions.appendChild(btnPrev);
+
+        tableWrap.appendChild(buildPreventiveTable(p.preventiveParts));
+      }
+
+      card.appendChild(top);
+      if(actions.childNodes.length) card.appendChild(actions);
+      if(hasPreventive) card.appendChild(tableWrap);
+
+      return card;
+    }
+
+    function buildPreventiveTable(items){
+      const table = document.createElement("table");
+
+      const thead = document.createElement("thead");
+      thead.innerHTML = `
+        <tr>
+          <th style="width:46%">Descripción</th>
+          <th style="width:26%">N° Producto</th>
+          <th style="width:28%">Precio (USD)</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      for(const it of items){
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${escapeHtml(it.desc)}</td>
+          <td>${escapeHtml(it.productNo)}</td>
+          <td>${CURRENCY} ${escapeHtml(it.priceUsd)}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+
+      return table;
+    }
+
+    function escapeHtml(str){
+      return (str ?? "").toString()
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    // -----------------------------
+    // Init
+    // -----------------------------
+    buildDropdown();
+    render();
+
+    powerSelect.addEventListener("change", render);
+    quickSearch.addEventListener("input", () => {
+      // Small debounce-ish: render on next frame to keep it snappy
+      window.requestAnimationFrame(render);
+    });
+  </script>
+</body>
+</html>
