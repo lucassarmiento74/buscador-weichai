@@ -1175,7 +1175,43 @@
         .replaceAll(">","&gt;")
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
-    }
+    } 
+    // -----------------------------
+// WhatsApp Share
+// -----------------------------
+function buildWhatsAppMessage(p){
+  const lines = [];
+
+  lines.push("📄 *COTIZACIÓN WEICHAI POWER*");
+  lines.push("");
+  lines.push(`🔧 *Equipo:* ${p.productNo}${p.potencia ? " (" + p.potencia + ")" : ""}`);
+  lines.push(`📦 *Descripción:* ${p.description}`);
+  lines.push(`💰 *Precio:* USD ${p.priceUsd}`);
+  lines.push("");
+
+  if (Array.isArray(p.preventiveParts) && p.preventiveParts.length) {
+    lines.push("🛠️ *Repuestos Preventivos Incluidos:*");
+    p.preventiveParts.forEach(r => {
+      lines.push(`• ${r.desc} (${r.productNo}): USD ${r.priceUsd}`);
+    });
+    lines.push("");
+  }
+
+  if (p.photoUrl) {
+    lines.push(`📷 *Ver foto:* ${p.photoUrl}`);
+  }
+
+  if (p.brochureUrl) {
+    lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
+  }
+
+  return encodeURIComponent(lines.join("\n"));
+}
+
+function getWhatsAppUrl(p){
+  const text = buildWhatsAppMessage(p);
+  return `https://wa.me/?text=${text}`;
+}
 
     // -----------------------------
     // Init
@@ -1190,5 +1226,6 @@
   </script>
 </body>
 </html>
+
 
 
