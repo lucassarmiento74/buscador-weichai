@@ -287,6 +287,13 @@
     }
     .btn:hover{ filter: brightness(1.04); }
 
+    /* WhatsApp button (verde) */
+    .btnWhats{
+      background: linear-gradient(180deg, #2BE36B, #12B84F);
+      color:#062113;
+      box-shadow: 0 10px 24px rgba(18,184,79,.22);
+    }
+
     /* Disabled buttons (when no link / no data) */
     .btnDisabled{
       opacity: .45;
@@ -406,6 +413,47 @@
       const id = extractDriveId(url);
       if(!id) return url;
       return `https://drive.google.com/uc?export=download&id=${id}`;
+    }
+
+    // -----------------------------
+    // WhatsApp Share
+    // -----------------------------
+    function buildWhatsAppMessage(p){
+      const lines = [];
+
+      lines.push("📄 *COTIZACIÓN WEICHAI POWER*");
+      lines.push("");
+
+      const pot = (p.potencia && p.potencia.trim()) ? ` (${p.potencia.trim()})` : "";
+      const variant = p.variant ? ` (${p.variant})` : "";
+
+      lines.push(`🔧 *Equipo:* ${p.productNo}${pot}${variant}`);
+      lines.push(`📦 *Descripción:* ${p.description || (p.kind === "motor" ? "MOTOR" : "EQUIPO")}`);
+      lines.push(`💰 *Precio de venta:* USD ${p.priceUsd}`);
+      lines.push("");
+
+      if (Array.isArray(p.preventiveParts) && p.preventiveParts.length) {
+        lines.push("🛠️ *Repuestos preventivos incluidos:*");
+        p.preventiveParts.forEach(r => {
+          lines.push(`• ${r.desc} (${r.productNo}): USD ${r.priceUsd}`);
+        });
+        lines.push("");
+      }
+
+      if (p.photoUrl && p.photoUrl.trim()) {
+        lines.push(`📷 *Ver foto:* ${p.photoUrl}`);
+      }
+
+      if (p.brochureUrl && p.brochureUrl.trim()) {
+        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
+      }
+
+      return encodeURIComponent(lines.join("\n"));
+    }
+
+    function getWhatsAppUrl(p){
+      const text = buildWhatsAppMessage(p);
+      return `https://wa.me/?text=${text}`;
     }
 
     // -----------------------------
@@ -1085,6 +1133,15 @@
       actions.appendChild(dlImg);
       actions.appendChild(dlBro);
 
+      // WHATSAPP (Compartir cotización)
+      const btnWa = document.createElement("a");
+      btnWa.className = "btn btnWhats";
+      btnWa.textContent = "📲 Compartir por WhatsApp";
+      btnWa.href = getWhatsAppUrl(p);
+      btnWa.target = "_blank";
+      btnWa.rel = "noopener noreferrer";
+      actions.appendChild(btnWa);
+
       // REPUESTOS (Preventivos + Correctivos)
       const hasPreventive = Array.isArray(p.preventiveParts) && p.preventiveParts.length > 0;
       const hasCorrective = Array.isArray(p.correctiveParts) && p.correctiveParts.length > 0;
@@ -1175,43 +1232,7 @@
         .replaceAll(">","&gt;")
         .replaceAll('"',"&quot;")
         .replaceAll("'","&#039;");
-    } 
-    // -----------------------------
-// WhatsApp Share
-// -----------------------------
-function buildWhatsAppMessage(p){
-  const lines = [];
-
-  lines.push("📄 *COTIZACIÓN WEICHAI POWER*");
-  lines.push("");
-  lines.push(`🔧 *Equipo:* ${p.productNo}${p.potencia ? " (" + p.potencia + ")" : ""}`);
-  lines.push(`📦 *Descripción:* ${p.description}`);
-  lines.push(`💰 *Precio:* USD ${p.priceUsd}`);
-  lines.push("");
-
-  if (Array.isArray(p.preventiveParts) && p.preventiveParts.length) {
-    lines.push("🛠️ *Repuestos Preventivos Incluidos:*");
-    p.preventiveParts.forEach(r => {
-      lines.push(`• ${r.desc} (${r.productNo}): USD ${r.priceUsd}`);
-    });
-    lines.push("");
-  }
-
-  if (p.photoUrl) {
-    lines.push(`📷 *Ver foto:* ${p.photoUrl}`);
-  }
-
-  if (p.brochureUrl) {
-    lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
-  }
-
-  return encodeURIComponent(lines.join("\n"));
-}
-
-function getWhatsAppUrl(p){
-  const text = buildWhatsAppMessage(p);
-  return `https://wa.me/?text=${text}`;
-}
+    }
 
     // -----------------------------
     // Init
@@ -1226,6 +1247,7 @@ function getWhatsAppUrl(p){
   </script>
 </body>
 </html>
+
 
 
 
