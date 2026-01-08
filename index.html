@@ -285,10 +285,10 @@
       border:1px solid rgba(234,242,255,.18);
       color: var(--text);
     }
-    .btnGreen{
-      background: linear-gradient(180deg, #1DB954, #128C3A);
-      color:#072012;
-      box-shadow: 0 10px 24px rgba(29,185,84,.18);
+    .btnWhats{
+      background: linear-gradient(180deg, #25D366, #128C7E);
+      color:#fff;
+      box-shadow: 0 10px 24px rgba(37,211,102,.18);
     }
     .btn:hover{ filter: brightness(1.04); }
 
@@ -333,6 +333,18 @@
     td{
       color: rgba(234,242,255,.86);
     }
+
+    .rentalBox{
+      border-radius: 14px;
+      border:1px solid rgba(234,242,255,.12);
+      background: rgba(4,18,38,.55);
+      padding: 12px 12px;
+      color: rgba(234,242,255,.88);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+    .rentalBox b{ color:#fff; }
+
     .foot{
       padding: 12px 14px 16px;
       color: rgba(234,242,255,.65);
@@ -357,7 +369,7 @@
       <div class="brand">
         <div class="badge"><span class="dot"></span> Catálogo interno (USD) – Weichai</div>
         <h1>Buscador por potencia – Generadores y Motores</h1>
-        <p class="sub">Elegí una potencia. El desplegable se mantiene separado en Generadores y Motores.</p>
+        <p class="sub">Elegí una potencia. Si hay potencias repetidas, vas a ver un tag corto (Diesel / Premium / Gas / Motor) para diferenciar.</p>
       </div>
     </div>
 
@@ -373,8 +385,9 @@
         </div>
       </div>
       <div class="hint">
-        • Los <b>motores</b> no tienen repuestos/folleto/imagen/rental (por ahora).<br/>
-        • El generador <b>312 kVA</b> está marcado como <b>GAS</b> (los demás generadores: diésel / premium).
+        • Los <b>motores</b> no tienen repuestos/folleto/imagen (por ahora).<br/>
+        • El generador <b>312 kVA</b> está marcado como <b>GAS</b> (los demás generadores: diésel / premium).<br/>
+        • <b>Rental</b>: referencia informativa (condiciones se coordinan luego).
       </div>
 
       <div id="results" class="grid"></div>
@@ -418,7 +431,6 @@
     // -----------------------------
     const CURRENCY = "USD";
 
-    // Nota: WPG22F1 eliminado (no se vende)
     const PRODUCTS = [
       // ---------------- GENERADORES ----------------
       {
@@ -459,6 +471,7 @@
           { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
         ]
       },
+
       {
         kind: "generador",
         fuel: "diesel",
@@ -500,6 +513,7 @@
           { desc:"Junta descarga turbo", productNo:"2067800", priceUsd:"0,81" },
         ]
       },
+
       {
         kind: "generador",
         fuel: "diesel",
@@ -544,6 +558,7 @@
           { desc:"Tuerca escape/turbo", productNo:"610800110349", priceUsd:"1,89" },
         ]
       },
+
       {
         kind: "generador",
         fuel: "diesel",
@@ -585,6 +600,7 @@
           { desc:"Sensor de temperatura", productNo:"1002381183", priceUsd:"47,18" },
         ]
       },
+
       {
         kind: "generador",
         fuel: "diesel",
@@ -630,6 +646,7 @@
           { desc:"Sensor de temperatura", productNo:"1002381183", priceUsd:"47,18" },
         ]
       },
+
       {
         kind: "generador",
         fuel: "premium",
@@ -675,6 +692,7 @@
           { desc:"Sensor de temperatura", productNo:"1002381183", priceUsd:"47,18" },
         ]
       },
+
       {
         kind: "generador",
         fuel: "diesel",
@@ -719,6 +737,7 @@
           { desc:"Sensor de velocidad", productNo:"612600190113", priceUsd:"84,71" },
         ]
       },
+
       {
         kind: "generador",
         fuel: "diesel",
@@ -762,6 +781,8 @@
           { desc:"Sensor presión y temperatura refuerzo", productNo:"1002870099", priceUsd:"109,45" },
         ]
       },
+
+      // ---------------- GENERADOR GAS ----------------
       {
         kind: "generador",
         fuel: "gas",
@@ -805,8 +826,8 @@
       { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"33kVA / 30kW", productNo:"4M06G35/5", priceUsd:"5.947,20" },
       { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"50kVA / 45kW", productNo:"4M06G50/5", priceUsd:"6.708,24" },
       { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"110kVA / 100kW", productNo:"4M10G110/5", priceUsd:"9.371,88" },
-      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"", productNo:"WD10G220E23", priceUsd:"17.584,56" },
-      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"", productNo:"WP6G125E22", priceUsd:"9.187,92" },
+      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"217 HP", productNo:"WD10G220E23", priceUsd:"17.584,56" },
+      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"123 HP", productNo:"WP6G125E22", priceUsd:"9.187,92" },
       { kind:"motor", description:"MOTORES DIESEL", potencia:"25 KW", productNo:"4M06G20/5", priceUsd:"5.155,92" },
       { kind:"motor", description:"MOTORES DIESEL", potencia:"66 KW", productNo:"4M10G70/5", priceUsd:"7.779,24" },
       { kind:"motor", description:"MOTORES DIESEL", potencia:"264 KW", productNo:"6M16G275/5", priceUsd:"21.848,40" },
@@ -854,19 +875,16 @@
     }
 
     function rentalText(p){
-      return `${CURRENCY} ${p.rentalUsd}`;
+      const v = (p.rentalUsd || "").toString().trim();
+      return v ? `${CURRENCY} ${v}` : "";
     }
 
-    // Cambio 1 + C): dropdown prolijo -> SOLO potencia + tag cortito (sin modelo)
-    function optionLabelCompact(p){
+    // Dropdown label: SOLO POTENCIA + TAG CORTO (manteniendo separación GEN/MOTOR)
+    function optionLabel(p){
       const pot = (p.potencia || "").trim() ? p.potencia.trim() : "Sin especificar";
-      const tagBase = (p.kind === "motor")
-        ? "MOTOR"
-        : (p.fuel === "gas" ? "GAS" : (p.fuel === "premium" ? "PREMIUM" : "DIESEL"));
-
-      // Para evitar confusión en 110 (standard/premium) usamos variante solo si existe
-      const v = p.variant ? ` (${p.variant})` : "";
-      return `${pot} — ${tagBase}${v}`;
+      const tag = (p.kind === "motor") ? "Motor" : fuelLabel(p);
+      // No mostramos modelo ni descripción, solo potencia + tag corto
+      return `${pot} — ${tag}`;
     }
 
     function sortByPowerThenModel(a,b){
@@ -896,9 +914,8 @@
       ogGen.label = "GENERADORES";
       for(const p of gens){
         const opt = document.createElement("option");
-        // Valor único para seleccionar el item exacto aunque el label no muestre el modelo
         opt.value = `${getPowerKey(p.potencia)}|||${p.productNo}|||${p.variant || ""}|||${p.kind}`;
-        opt.textContent = optionLabelCompact(p);
+        opt.textContent = optionLabel(p);
         ogGen.appendChild(opt);
       }
 
@@ -907,12 +924,69 @@
       for(const p of motors){
         const opt = document.createElement("option");
         opt.value = `${getPowerKey(p.potencia)}|||${p.productNo}|||${p.variant || ""}|||${p.kind}`;
-        opt.textContent = optionLabelCompact(p);
+        opt.textContent = optionLabel(p);
         ogMot.appendChild(opt);
       }
 
       powerSelect.appendChild(ogGen);
       powerSelect.appendChild(ogMot);
+    }
+
+    // -----------------------------
+    // WhatsApp Share
+    // -----------------------------
+    function buildWhatsAppMessageSale(p){
+      const lines = [];
+      lines.push("📄 *COTIZACIÓN WEICHAI POWER*");
+      lines.push("");
+      lines.push(`🔧 *Equipo:* ${p.productNo}${p.potencia ? " (" + p.potencia + ")" : ""}`);
+      lines.push(`📦 *Descripción:* ${p.description}`);
+      lines.push(`💰 *Precio venta:* USD ${p.priceUsd}`);
+      lines.push("");
+
+      if (Array.isArray(p.preventiveParts) && p.preventiveParts.length) {
+        lines.push("🛠️ *Repuestos preventivos:*");
+        p.preventiveParts.forEach(r => {
+          lines.push(`• ${r.desc} (${r.productNo}): USD ${r.priceUsd}`);
+        });
+        lines.push("");
+      }
+
+      if (p.photoUrl && p.photoUrl.trim()) {
+        lines.push(`📷 *Ver foto:* ${driveViewUrl(p.photoUrl)}`);
+      }
+      if (p.brochureUrl && p.brochureUrl.trim()) {
+        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
+      }
+      return encodeURIComponent(lines.join("\n"));
+    }
+
+    function buildWhatsAppMessageRental(p){
+      const lines = [];
+      lines.push("📄 *CONSULTA ALQUILER (RENTAL) – WEICHAI POWER*");
+      lines.push("");
+      lines.push(`🔧 *Equipo:* ${p.productNo}${p.potencia ? " (" + p.potencia + ")" : ""}`);
+      lines.push(`📦 *Descripción:* ${p.description}`);
+      lines.push(`💸 *Valor rental referencia:* USD ${p.rentalUsd}`);
+      lines.push("");
+
+      if (p.photoUrl && p.photoUrl.trim()) {
+        lines.push(`📷 *Ver foto:* ${driveViewUrl(p.photoUrl)}`);
+      }
+      if (p.brochureUrl && p.brochureUrl.trim()) {
+        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
+      }
+      return encodeURIComponent(lines.join("\n"));
+    }
+
+    function getWhatsAppUrlSale(p){
+      const text = buildWhatsAppMessageSale(p);
+      return `https://wa.me/?text=${text}`;
+    }
+
+    function getWhatsAppUrlRental(p){
+      const text = buildWhatsAppMessageRental(p);
+      return `https://wa.me/?text=${text}`;
     }
 
     // -----------------------------
@@ -935,16 +1009,13 @@
 
       if(q){
         filtered = filtered.filter(p => {
-          // Se mantiene la búsqueda por modelo aunque el dropdown no lo muestre
           const hay = [
             p.kind,
             p.description,
             p.potencia,
             p.productNo,
             p.variant,
-            p.fuel,
-            p.priceUsd,
-            p.rentalUsd
+            p.fuel
           ].map(normalize).join(" | ");
           return hay.includes(q);
         });
@@ -968,16 +1039,13 @@
       const imgBox = document.createElement("div");
       imgBox.className = "imgBox";
 
-      // --- Imagen: si no hay o falla, NO mostrar zócalo/mensaje (se oculta)
       const hasPhoto = !!(p.photoUrl && p.photoUrl.trim());
       if(hasPhoto){
         const img = document.createElement("img");
         img.alt = `${p.description} ${p.productNo}`;
         img.src = driveViewUrl(p.photoUrl);
         img.loading = "lazy";
-        img.onerror = () => {
-          imgBox.classList.add("hidden");
-        };
+        img.onerror = () => imgBox.classList.add("hidden");
         imgBox.appendChild(img);
       } else {
         imgBox.classList.add("hidden");
@@ -1008,7 +1076,7 @@
       meta.innerHTML = `
         <div><b>Potencia:</b> ${escapeHtml(potenciaTxt)}</div>
         <div><b>Modelo:</b> ${escapeHtml(p.productNo)}</div>
-        <div><b>Precio:</b> ${priceText(p)}</div>
+        <div><b>Precio:</b> ${escapeHtml(priceText(p))}</div>
         <div><b>Tipo:</b> ${p.kind === "motor" ? "Motor" : "Generador"}</div>
       `;
 
@@ -1021,8 +1089,7 @@
       const actions = document.createElement("div");
       actions.className = "actions";
 
-      // --- Botones siempre presentes (pero deshabilitados si no aplica)
-      // FOTO
+      // --- FOTO
       const viewImg = document.createElement("a");
       viewImg.className = "btn btnGhost";
       viewImg.textContent = "Ver foto";
@@ -1049,7 +1116,7 @@
         dlImg.href = "javascript:void(0)";
       }
 
-      // FOLLETO
+      // --- FOLLETO
       const hasBrochure = !!(p.brochureUrl && p.brochureUrl.trim());
       const dlBro = document.createElement("a");
       dlBro.className = "btn btnPrimary";
@@ -1068,35 +1135,61 @@
       actions.appendChild(dlImg);
       actions.appendChild(dlBro);
 
-      // Cambio 4: botón informativo de rental (solo generadores)
-      if(p.kind === "generador"){
-        const hasRental = !!(p.rentalUsd && p.rentalUsd.toString().trim());
-        const rentalBtn = document.createElement("button");
-        rentalBtn.className = "btn btnGhost";
-        rentalBtn.type = "button";
-        rentalBtn.textContent = hasRental
-          ? `Valor rental referencia: ${rentalText(p)}`
-          : "Valor rental referencia";
-        if(!hasRental){
-          rentalBtn.classList.add("btnDisabled");
-          rentalBtn.title = "Sin valor rental cargado";
-        } else {
-          rentalBtn.onclick = () => {}; // informativo (sin acción)
-          rentalBtn.title = "Valor de referencia de alquiler";
-        }
-        actions.appendChild(rentalBtn);
+      // -----------------------------
+      // Rental (solo generadores)
+      // -----------------------------
+      const hasRental = (p.kind === "generador") && (p.rentalUsd && p.rentalUsd.toString().trim());
+
+      const rentalWrap = document.createElement("div");
+      rentalWrap.className = "tableWrap";
+
+      const btnRental = document.createElement("button");
+      btnRental.className = "btn btnGhost";
+      btnRental.type = "button";
+      btnRental.textContent = "Valor rental referencia";
+
+      if(hasRental){
+        btnRental.onclick = () => {
+          rentalWrap.classList.toggle("open");
+          btnRental.textContent = rentalWrap.classList.contains("open")
+            ? "Ocultar valor rental"
+            : "Valor rental referencia";
+        };
+        const box = document.createElement("div");
+        box.className = "rentalBox";
+        box.innerHTML = `<b>Valor rental referencia:</b> ${escapeHtml(rentalText(p))}`;
+        rentalWrap.appendChild(box);
+        actions.appendChild(btnRental);
       }
 
-      // Compartir por WhatsApp
-      const btnWa = document.createElement("a");
-      btnWa.className = "btn btnGreen";
-      btnWa.textContent = "Compartir por WhatsApp";
-      btnWa.href = getWhatsAppUrl(p);
-      btnWa.target = "_blank";
-      btnWa.rel = "noopener noreferrer";
-      actions.appendChild(btnWa);
+      // -----------------------------
+      // WhatsApp (2 botones)
+      // -----------------------------
+      const btnWASale = document.createElement("a");
+      btnWASale.className = "btn btnWhats";
+      btnWASale.textContent = "Compartir venta";
+      btnWASale.href = getWhatsAppUrlSale(p);
+      btnWASale.target = "_blank";
+      btnWASale.rel = "noopener noreferrer";
+      actions.appendChild(btnWASale);
 
-      // REPUESTOS (Preventivos + Correctivos)
+      const btnWARental = document.createElement("a");
+      btnWARental.className = "btn btnWhats";
+      btnWARental.textContent = "Compartir alquiler";
+      if(hasRental){
+        btnWARental.href = getWhatsAppUrlRental(p);
+        btnWARental.target = "_blank";
+        btnWARental.rel = "noopener noreferrer";
+      } else {
+        btnWARental.classList.add("btnDisabled");
+        btnWARental.title = "Rental disponible solo en generadores";
+        btnWARental.href = "javascript:void(0)";
+      }
+      actions.appendChild(btnWARental);
+
+      // -----------------------------
+      // REPUESTOS
+      // -----------------------------
       const hasPreventive = Array.isArray(p.preventiveParts) && p.preventiveParts.length > 0;
       const hasCorrective = Array.isArray(p.correctiveParts) && p.correctiveParts.length > 0;
 
@@ -1145,6 +1238,7 @@
 
       card.appendChild(top);
       card.appendChild(actions);
+      if(hasRental) card.appendChild(rentalWrap);
       if(hasPreventive) card.appendChild(prevWrap);
       if(hasCorrective) card.appendChild(corrWrap);
 
@@ -1189,51 +1283,6 @@
     }
 
     // -----------------------------
-    // WhatsApp Share
-    // -----------------------------
-    function buildWhatsAppMessage(p){
-      const lines = [];
-
-      lines.push("📄 *COTIZACIÓN WEICHAI POWER*");
-      lines.push("");
-      lines.push(`🔧 *Equipo:* ${p.productNo}${p.potencia ? " (" + p.potencia + ")" : ""}`);
-      lines.push(`📦 *Descripción:* ${p.description}`);
-      lines.push(`💰 *Precio de venta:* USD ${p.priceUsd}`);
-
-      // (No lo pediste, pero queda lógico mostrarlo solo si existe)
-      // Si preferís NO enviarlo por WhatsApp, decime y lo saco.
-      if (p.kind === "generador" && p.rentalUsd) {
-        lines.push(`🧾 *Valor rental referencia:* USD ${p.rentalUsd}`);
-      }
-
-      lines.push("");
-
-      // Cambio 5: quitar palabra "incluidos"
-      if (Array.isArray(p.preventiveParts) && p.preventiveParts.length) {
-        lines.push("🛠️ *Repuestos Preventivos:*");
-        p.preventiveParts.forEach(r => {
-          lines.push(`• ${r.desc} (${r.productNo}): USD ${r.priceUsd}`);
-        });
-        lines.push("");
-      }
-
-      if (p.photoUrl) {
-        lines.push(`📷 *Ver foto:* ${p.photoUrl}`);
-      }
-
-      if (p.brochureUrl) {
-        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
-      }
-
-      return encodeURIComponent(lines.join("\n"));
-    }
-
-    function getWhatsAppUrl(p){
-      const text = buildWhatsAppMessage(p);
-      return `https://wa.me/?text=${text}`;
-    }
-
-    // -----------------------------
     // Init
     // -----------------------------
     buildDropdown();
@@ -1246,6 +1295,7 @@
   </script>
 </body>
 </html>
+
 
 
 
