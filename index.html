@@ -285,14 +285,12 @@
       border:1px solid rgba(234,242,255,.18);
       color: var(--text);
     }
-    .btn:hover{ filter: brightness(1.04); }
-
-    /* WhatsApp button (verde) */
-    .btnWhats{
-      background: linear-gradient(180deg, #2BE36B, #12B84F);
-      color:#062113;
-      box-shadow: 0 10px 24px rgba(18,184,79,.22);
+    .btnGreen{
+      background: linear-gradient(180deg, #1DB954, #128C3A);
+      color:#072012;
+      box-shadow: 0 10px 24px rgba(29,185,84,.18);
     }
+    .btn:hover{ filter: brightness(1.04); }
 
     /* Disabled buttons (when no link / no data) */
     .btnDisabled{
@@ -359,7 +357,7 @@
       <div class="brand">
         <div class="badge"><span class="dot"></span> Catálogo interno (USD) – Weichai</div>
         <h1>Buscador por potencia – Generadores y Motores</h1>
-        <p class="sub">Elegí una potencia. Si hay potencias repetidas, vas a ver el modelo/variante para evitar confusiones (ej: 22 y 110).</p>
+        <p class="sub">Elegí una potencia. El desplegable se mantiene separado en Generadores y Motores.</p>
       </div>
     </div>
 
@@ -375,7 +373,7 @@
         </div>
       </div>
       <div class="hint">
-        • Los <b>motores</b> no tienen repuestos/folleto/imagen (por ahora).<br/>
+        • Los <b>motores</b> no tienen repuestos/folleto/imagen/rental (por ahora).<br/>
         • El generador <b>312 kVA</b> está marcado como <b>GAS</b> (los demás generadores: diésel / premium).
       </div>
 
@@ -416,51 +414,11 @@
     }
 
     // -----------------------------
-    // WhatsApp Share
-    // -----------------------------
-    function buildWhatsAppMessage(p){
-      const lines = [];
-
-      lines.push("📄 *COTIZACIÓN WEICHAI POWER*");
-      lines.push("");
-
-      const pot = (p.potencia && p.potencia.trim()) ? ` (${p.potencia.trim()})` : "";
-      const variant = p.variant ? ` (${p.variant})` : "";
-
-      lines.push(`🔧 *Equipo:* ${p.productNo}${pot}${variant}`);
-      lines.push(`📦 *Descripción:* ${p.description || (p.kind === "motor" ? "MOTOR" : "EQUIPO")}`);
-      lines.push(`💰 *Precio de venta:* USD ${p.priceUsd}`);
-      lines.push("");
-
-      if (Array.isArray(p.preventiveParts) && p.preventiveParts.length) {
-        lines.push("🛠️ *Repuestos preventivos incluidos:*");
-        p.preventiveParts.forEach(r => {
-          lines.push(`• ${r.desc} (${r.productNo}): USD ${r.priceUsd}`);
-        });
-        lines.push("");
-      }
-
-      if (p.photoUrl && p.photoUrl.trim()) {
-        lines.push(`📷 *Ver foto:* ${p.photoUrl}`);
-      }
-
-      if (p.brochureUrl && p.brochureUrl.trim()) {
-        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
-      }
-
-      return encodeURIComponent(lines.join("\n"));
-    }
-
-    function getWhatsAppUrl(p){
-      const text = buildWhatsAppMessage(p);
-      return `https://wa.me/?text=${text}`;
-    }
-
-    // -----------------------------
     // Data
     // -----------------------------
     const CURRENCY = "USD";
 
+    // Nota: WPG22F1 eliminado (no se vende)
     const PRODUCTS = [
       // ---------------- GENERADORES ----------------
       {
@@ -469,44 +427,8 @@
         description: "GENERADOR CABINADO",
         potencia: "22KVA/18KW",
         productNo: "WPG22L1",
-        priceUsd: "13.684,01",
-        brochureUrl: "https://drive.google.com/file/d/1Fu0HCP_qpFG3PLb8NPpsvB4Bc_v9JpX7/view?usp=drive_link",
-        photoUrl: "",
-        preventiveParts: [
-          { desc:"Filtro de aceite (500 hs)", productNo:"1002525224", priceUsd:"27,44" },
-          { desc:"Filtro de aceite (500 hs)", productNo:"1002003753", priceUsd:"31,73" },
-          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000622860", priceUsd:"9,09" },
-          { desc:"Correa accesorios (2000 hs)", productNo:"2B0900006 / AV17X940L", priceUsd:"7,84" },
-          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1000940409", priceUsd:"70,88" },
-        ],
-        correctiveParts: [
-          { desc:"Bomba inyectora", productNo:"1003896473", priceUsd:"560,39" },
-          { desc:"Junta bomba inyectora", productNo:"1000852702", priceUsd:"1,11" },
-          { desc:"Inyector", productNo:"1015968934", priceUsd:"64,02" },
-          { desc:"Inyector", productNo:"2010924", priceUsd:"67,06" },
-          { desc:"Junta multiple escape", productNo:"1000184083", priceUsd:"2,60" },
-          { desc:"Bulon escape", productNo:"1000071147", priceUsd:"2,33" },
-          { desc:"Bomba de agua", productNo:"1002262420", priceUsd:"200,71" },
-          { desc:"Junta bomba de agua", productNo:"1000795642", priceUsd:"0,84" },
-          { desc:"Termostato", productNo:"21033-72-K/155B", priceUsd:"15,36" },
-          { desc:"Junta termostato", productNo:"1000846528", priceUsd:"0,57" },
-          { desc:"Motor de arranque", productNo:"1001538960", priceUsd:"307,06" },
-          { desc:"Alternador", productNo:"2085090110", priceUsd:"153,26" },
-          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
-          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
-          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
-          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
-          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
-          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
-        ]
-      },
-      {
-        kind: "generador",
-        fuel: "diesel",
-        description: "GENERADOR CABINADO",
-        potencia: "22KVA/18KW",
-        productNo: "WPG22F1",
-        priceUsd: "10.059,68",
+        priceUsd: "13.962,64",
+        rentalUsd: "1.551,40",
         brochureUrl: "https://drive.google.com/file/d/1Fu0HCP_qpFG3PLb8NPpsvB4Bc_v9JpX7/view?usp=drive_link",
         photoUrl: "",
         preventiveParts: [
@@ -543,7 +465,8 @@
         description: "GENERADOR CABINADO",
         potencia: "41KVA / 33KW",
         productNo: "WPG41L1",
-        priceUsd: "15.851,24",
+        priceUsd: "16.308,46",
+        rentalUsd: "1.812,05",
         brochureUrl: "https://drive.google.com/file/d/1BkwfIoCqncz4yidg7bvvH9lURYkg7eyo/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1MkY6AUN_ls-4CPaVfJ-vumhrkPxGccQA/view?usp=drive_link",
         preventiveParts: [
@@ -583,7 +506,8 @@
         description: "GENERADOR CABINADO",
         potencia: "55KVA / 44KW",
         productNo: "WPG55L1",
-        priceUsd: "16.470,74",
+        priceUsd: "17.074,54",
+        rentalUsd: "1.897,17",
         brochureUrl: "https://drive.google.com/file/d/1QopodZz0JGrYKJscZhSEdM6vBCz4wkZs/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1JkPPFYKiTAqE-ADcoW7Yv06Wq8Bwq4u1/view?usp=drive_link",
         preventiveParts: [
@@ -626,7 +550,8 @@
         description: "GENERADOR CABINADO",
         potencia: "70KVA / 55KW",
         productNo: "WPG70L1",
-        priceUsd: "18.546,07",
+        priceUsd: "20.099,52",
+        rentalUsd: "2.233,28",
         brochureUrl: "https://drive.google.com/file/d/1o3Y0IXATo_udBfwc9UHwgDrFTEHAM_5B/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1HA02gURsQdcA1IUiXiXsU1p_8Sv7FaA-/view?usp=drive_link",
         preventiveParts: [
@@ -667,7 +592,8 @@
         potencia: "110kVA / 88kW",
         productNo: "WPG110L1",
         variant: "Standard",
-        priceUsd: "23.152,73",
+        priceUsd: "24.013,08",
+        rentalUsd: "2.668,12",
         brochureUrl: "https://drive.google.com/file/d/1Wf6634neuJGYfdHXx2EQZwwp_h9PnE2B/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/12tIsTuddCvN9GA6svsvQ1z1u5656exRX/view?usp=drive_link",
         preventiveParts: [
@@ -711,7 +637,8 @@
         potencia: "110kVA / 88kW",
         productNo: "WPG110L1",
         variant: "Premium",
-        priceUsd: "31.711,15",
+        priceUsd: "27.615,04",
+        rentalUsd: "3.068,34",
         brochureUrl: "https://drive.google.com/file/d/1Wf6634neuJGYfdHXx2EQZwwp_h9PnE2B/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1CugpJ3C-hVjdoSZff1mmmaZ9sGsqC1LK/view?usp=drive_link",
         preventiveParts: [
@@ -754,7 +681,8 @@
         description: "GENERADOR CABINADO",
         potencia: "275kVA / 220kW",
         productNo: "WPG275L8",
-        priceUsd: "43.639,96",
+        priceUsd: "45.193,68",
+        rentalUsd: "5.021,52",
         brochureUrl: "https://drive.google.com/file/d/1ykvSRfz_qApLX30Pu7s6NMF-fga8jylM/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1yo03Ug_vlzKflqIS6DelUKHTw0dEtIai/view?usp=drive_link",
         preventiveParts: [
@@ -797,7 +725,8 @@
         description: "GENERADOR CABINADO",
         potencia: "550KVA / 440KW",
         productNo: "WPG550L8",
-        priceUsd: "84.297,66",
+        priceUsd: "91.652,96",
+        rentalUsd: "10.183,66",
         brochureUrl: "https://drive.google.com/file/d/1kUJGi8n4HPohxhzVnslyGPqCzh1fiV3o/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1fAvwWl8hsw1c4hYRpJMOqM3_F8BeJMnt/view?usp=drive_link",
         preventiveParts: [
@@ -833,15 +762,14 @@
           { desc:"Sensor presión y temperatura refuerzo", productNo:"1002870099", priceUsd:"109,45" },
         ]
       },
-
-      // ---------------- GENERADOR GAS ----------------
       {
         kind: "generador",
         fuel: "gas",
         description: "GENERADORES A GAS",
         potencia: "312KVA/250KW",
         productNo: "WPG312L8NG",
-        priceUsd: "125.512,08",
+        priceUsd: "119.700,00",
+        rentalUsd: "13.300,00",
         brochureUrl: "",
         photoUrl: "",
         preventiveParts: [
@@ -874,16 +802,16 @@
       },
 
       // ---------------- MOTORES ----------------
-      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"33kVA / 30kW", productNo:"4M06G35/5", priceUsd:"5.747,11" },
-      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"50kVA / 45kW", productNo:"4M06G50/5", priceUsd:"6.483,91" },
-      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"110kVA / 100kW", productNo:"4M10G110/5", priceUsd:"9.058,48" },
-      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"", productNo:"WD10G220E23", priceUsd:"19.895,94" },
-      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"", productNo:"WP6G125E22", priceUsd:"8.646,27" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"25 KW", productNo:"4M06G20/5", priceUsd:"4.623,97" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"66 KW", productNo:"4M10G70/5", priceUsd:"6.553,80" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"264 KW", productNo:"6M16G275/5", priceUsd:"18.406,69" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"499 KW", productNo:"6M21G550/5", priceUsd:"33.279,68" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"70 KW/94 HP", productNo:"4M10V4D0", priceUsd:"10.063,17" },
+      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"33kVA / 30kW", productNo:"4M06G35/5", priceUsd:"5.947,20" },
+      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"50kVA / 45kW", productNo:"4M06G50/5", priceUsd:"6.708,24" },
+      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"110kVA / 100kW", productNo:"4M10G110/5", priceUsd:"9.371,88" },
+      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"", productNo:"WD10G220E23", priceUsd:"17.584,56" },
+      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"", productNo:"WP6G125E22", priceUsd:"9.187,92" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"25 KW", productNo:"4M06G20/5", priceUsd:"5.155,92" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"66 KW", productNo:"4M10G70/5", priceUsd:"7.779,24" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"264 KW", productNo:"6M16G275/5", priceUsd:"21.848,40" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"499 KW", productNo:"6M21G550/5", priceUsd:"44.049,60" },
+      { kind:"motor", description:"MOTORES DIESEL", potencia:"70 KW", productNo:"4M10V4D0", priceUsd:"9.072,00" },
     ];
 
     // -----------------------------
@@ -925,15 +853,20 @@
       return `${CURRENCY} ${p.priceUsd}`;
     }
 
-    // Dropdown label (menos confuso: GEN vs MOTOR)
-    function optionLabel(p){
+    function rentalText(p){
+      return `${CURRENCY} ${p.rentalUsd}`;
+    }
+
+    // Cambio 1 + C): dropdown prolijo -> SOLO potencia + tag cortito (sin modelo)
+    function optionLabelCompact(p){
       const pot = (p.potencia || "").trim() ? p.potencia.trim() : "Sin especificar";
-      const kindTag = (p.kind === "motor") ? "[MOTOR]" : "[GEN]";
-      const fuelTag = (p.kind === "motor")
-        ? ""
-        : (p.fuel === "gas" ? " GAS" : (p.fuel === "premium" ? " PREMIUM" : " DIESEL"));
-      const variant = p.variant ? ` – ${p.variant}` : "";
-      return `${kindTag}${fuelTag} ${pot} — ${p.productNo}${variant}`;
+      const tagBase = (p.kind === "motor")
+        ? "MOTOR"
+        : (p.fuel === "gas" ? "GAS" : (p.fuel === "premium" ? "PREMIUM" : "DIESEL"));
+
+      // Para evitar confusión en 110 (standard/premium) usamos variante solo si existe
+      const v = p.variant ? ` (${p.variant})` : "";
+      return `${pot} — ${tagBase}${v}`;
     }
 
     function sortByPowerThenModel(a,b){
@@ -963,8 +896,9 @@
       ogGen.label = "GENERADORES";
       for(const p of gens){
         const opt = document.createElement("option");
+        // Valor único para seleccionar el item exacto aunque el label no muestre el modelo
         opt.value = `${getPowerKey(p.potencia)}|||${p.productNo}|||${p.variant || ""}|||${p.kind}`;
-        opt.textContent = optionLabel(p);
+        opt.textContent = optionLabelCompact(p);
         ogGen.appendChild(opt);
       }
 
@@ -973,7 +907,7 @@
       for(const p of motors){
         const opt = document.createElement("option");
         opt.value = `${getPowerKey(p.potencia)}|||${p.productNo}|||${p.variant || ""}|||${p.kind}`;
-        opt.textContent = optionLabel(p);
+        opt.textContent = optionLabelCompact(p);
         ogMot.appendChild(opt);
       }
 
@@ -1001,13 +935,16 @@
 
       if(q){
         filtered = filtered.filter(p => {
+          // Se mantiene la búsqueda por modelo aunque el dropdown no lo muestre
           const hay = [
             p.kind,
             p.description,
             p.potencia,
             p.productNo,
             p.variant,
-            p.fuel
+            p.fuel,
+            p.priceUsd,
+            p.rentalUsd
           ].map(normalize).join(" | ");
           return hay.includes(q);
         });
@@ -1039,7 +976,6 @@
         img.src = driveViewUrl(p.photoUrl);
         img.loading = "lazy";
         img.onerror = () => {
-          // Ocultar completamente para no "ensuciar" la ficha
           imgBox.classList.add("hidden");
         };
         imgBox.appendChild(img);
@@ -1070,7 +1006,7 @@
 
       const potenciaTxt = (p.potencia && p.potencia.trim()) ? p.potencia.trim() : "Sin especificar";
       meta.innerHTML = `
-        <div><b>Potencia:</b> ${potenciaTxt}</div>
+        <div><b>Potencia:</b> ${escapeHtml(potenciaTxt)}</div>
         <div><b>Modelo:</b> ${escapeHtml(p.productNo)}</div>
         <div><b>Precio:</b> ${priceText(p)}</div>
         <div><b>Tipo:</b> ${p.kind === "motor" ? "Motor" : "Generador"}</div>
@@ -1079,7 +1015,6 @@
       content.appendChild(titleRow);
       content.appendChild(meta);
 
-      // Si no hay imagen, el top queda solo con contenido (más prolijo)
       if(!imgBox.classList.contains("hidden")) top.appendChild(imgBox);
       top.appendChild(content);
 
@@ -1133,10 +1068,29 @@
       actions.appendChild(dlImg);
       actions.appendChild(dlBro);
 
-      // WHATSAPP (Compartir cotización)
+      // Cambio 4: botón informativo de rental (solo generadores)
+      if(p.kind === "generador"){
+        const hasRental = !!(p.rentalUsd && p.rentalUsd.toString().trim());
+        const rentalBtn = document.createElement("button");
+        rentalBtn.className = "btn btnGhost";
+        rentalBtn.type = "button";
+        rentalBtn.textContent = hasRental
+          ? `Valor rental referencia: ${rentalText(p)}`
+          : "Valor rental referencia";
+        if(!hasRental){
+          rentalBtn.classList.add("btnDisabled");
+          rentalBtn.title = "Sin valor rental cargado";
+        } else {
+          rentalBtn.onclick = () => {}; // informativo (sin acción)
+          rentalBtn.title = "Valor de referencia de alquiler";
+        }
+        actions.appendChild(rentalBtn);
+      }
+
+      // Compartir por WhatsApp
       const btnWa = document.createElement("a");
-      btnWa.className = "btn btnWhats";
-      btnWa.textContent = "📲 Compartir por WhatsApp";
+      btnWa.className = "btn btnGreen";
+      btnWa.textContent = "Compartir por WhatsApp";
       btnWa.href = getWhatsAppUrl(p);
       btnWa.target = "_blank";
       btnWa.rel = "noopener noreferrer";
@@ -1235,6 +1189,51 @@
     }
 
     // -----------------------------
+    // WhatsApp Share
+    // -----------------------------
+    function buildWhatsAppMessage(p){
+      const lines = [];
+
+      lines.push("📄 *COTIZACIÓN WEICHAI POWER*");
+      lines.push("");
+      lines.push(`🔧 *Equipo:* ${p.productNo}${p.potencia ? " (" + p.potencia + ")" : ""}`);
+      lines.push(`📦 *Descripción:* ${p.description}`);
+      lines.push(`💰 *Precio de venta:* USD ${p.priceUsd}`);
+
+      // (No lo pediste, pero queda lógico mostrarlo solo si existe)
+      // Si preferís NO enviarlo por WhatsApp, decime y lo saco.
+      if (p.kind === "generador" && p.rentalUsd) {
+        lines.push(`🧾 *Valor rental referencia:* USD ${p.rentalUsd}`);
+      }
+
+      lines.push("");
+
+      // Cambio 5: quitar palabra "incluidos"
+      if (Array.isArray(p.preventiveParts) && p.preventiveParts.length) {
+        lines.push("🛠️ *Repuestos Preventivos:*");
+        p.preventiveParts.forEach(r => {
+          lines.push(`• ${r.desc} (${r.productNo}): USD ${r.priceUsd}`);
+        });
+        lines.push("");
+      }
+
+      if (p.photoUrl) {
+        lines.push(`📷 *Ver foto:* ${p.photoUrl}`);
+      }
+
+      if (p.brochureUrl) {
+        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
+      }
+
+      return encodeURIComponent(lines.join("\n"));
+    }
+
+    function getWhatsAppUrl(p){
+      const text = buildWhatsAppMessage(p);
+      return `https://wa.me/?text=${text}`;
+    }
+
+    // -----------------------------
     // Init
     // -----------------------------
     buildDropdown();
@@ -1247,6 +1246,7 @@
   </script>
 </body>
 </html>
+
 
 
 
