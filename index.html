@@ -3,25 +3,20 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Buscador Weichai – Generadores y Motores</title>
+  <title>Buscador Weichai – Stock de Generadores y Motores</title>
   <style>
     :root{
-      /* Paleta inspirada en Weichai (azul + rojo) */
       --w-blue-900:#082E5A;
       --w-blue-800:#0A3B73;
       --w-blue-700:#0B4DA2;
       --w-blue-600:#1662C4;
       --w-blue-100:#EAF2FF;
-
       --w-red-600:#E60012;
-
       --bg:#071B33;
       --card:#0B2547;
-      --card-2:#0E2D56;
       --border:rgba(255,255,255,.10);
       --text:#EAF2FF;
       --muted:rgba(234,242,255,.75);
-
       --shadow: 0 14px 34px rgba(0,0,0,.35);
       --radius:18px;
     }
@@ -39,23 +34,23 @@
     }
 
     .wrap{
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 22px 16px 34px;
+      padding: 20px 16px 40px;
     }
 
     .header{
       display:flex;
-      gap:14px;
+      gap:16px;
       align-items:flex-start;
       justify-content:space-between;
       flex-wrap:wrap;
-      padding: 14px 14px 8px;
+      padding: 16px 16px 12px;
     }
     .brand{
       display:flex;
       flex-direction:column;
-      gap:6px;
+      gap:8px;
       min-width: 240px;
     }
     .badge{
@@ -63,59 +58,66 @@
       align-items:center;
       gap:8px;
       width:max-content;
-      padding:7px 10px;
+      padding:8px 12px;
       border-radius:999px;
       background: rgba(11,77,162,.18);
       border:1px solid rgba(11,77,162,.35);
       color: var(--text);
       font-weight: 650;
       letter-spacing:.2px;
-      font-size: 12.5px;
+      font-size: 13px;
     }
     .dot{
       width:10px;height:10px;border-radius:50%;
       background: var(--w-red-600);
       box-shadow: 0 0 0 4px rgba(230,0,18,.15);
+      animation: pulse 2s ease infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
     }
     h1{
       margin: 0;
-      font-size: clamp(18px, 2.3vw, 26px);
-      letter-spacing:.2px;
+      font-size: clamp(20px, 2.5vw, 28px);
+      letter-spacing:.3px;
     }
     .sub{
       margin:0;
       color: var(--muted);
-      font-size: 13.5px;
-      line-height:1.4;
+      font-size: 14px;
+      line-height:1.5;
     }
 
     .panel{
-      margin-top: 10px;
+      margin-top: 12px;
       background: rgba(11,37,71,.65);
       border:1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow:hidden;
+      backdrop-filter: blur(10px);
     }
 
     .controls{
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 12px;
-      padding: 14px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      padding: 20px;
       background: linear-gradient(180deg, rgba(14,45,86,.92), rgba(11,37,71,.65));
       border-bottom:1px solid var(--border);
     }
-    @media (max-width: 720px){
+    @media (max-width: 860px){
       .controls{ grid-template-columns: 1fr; }
     }
 
     label{
       display:block;
-      font-size: 12px;
+      font-size: 12.5px;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin-bottom: 7px;
       letter-spacing:.2px;
+      font-weight: 600;
     }
 
     .select, .search{
@@ -124,29 +126,49 @@
       border:1px solid rgba(234,242,255,.22);
       background: rgba(234,242,255,.95);
       color: #071B33;
-      padding: 12px 12px;
+      padding: 12px 14px;
       font-size: 14px;
       outline:none;
+      transition: all .2s ease;
     }
     .select:focus, .search:focus{
       border-color: rgba(230,0,18,.65);
       box-shadow: 0 0 0 4px rgba(230,0,18,.16);
+      transform: translateY(-1px);
     }
 
     .hint{
-      padding: 0 14px 14px;
+      padding: 0 20px 16px;
       color: var(--muted);
-      font-size: 12.5px;
-      line-height:1.45;
+      font-size: 13px;
+      line-height:1.5;
+    }
+
+    .stats{
+      padding: 14px 20px;
+      background: rgba(11,77,162,.12);
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      font-size: 13.5px;
+      font-weight: 600;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .stat-item{
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .grid{
       display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      padding: 14px;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+      gap: 16px;
+      padding: 20px;
     }
-    @media (max-width: 860px){
+    @media (max-width: 1100px){
       .grid{ grid-template-columns: 1fr; }
     }
 
@@ -156,17 +178,23 @@
       border-radius: var(--radius);
       overflow:hidden;
       box-shadow: 0 10px 26px rgba(0,0,0,.25);
+      transition: transform .3s ease, box-shadow .3s ease;
     }
+    .card:hover{
+      transform: translateY(-4px);
+      box-shadow: 0 16px 36px rgba(0,0,0,.35);
+    }
+    
     .cardTop{
       display:flex;
-      gap: 12px;
-      padding: 14px;
+      gap: 14px;
+      padding: 16px;
       align-items: stretch;
     }
     .imgBox{
-      width: 150px;
-      min-width: 150px;
-      height: 120px;
+      width: 160px;
+      min-width: 160px;
+      height: 130px;
       border-radius: 14px;
       overflow:hidden;
       background: rgba(234,242,255,.08);
@@ -177,12 +205,12 @@
       position:relative;
     }
     .imgBox.hidden{ display:none; }
-    @media (max-width: 520px){
+    @media (max-width: 600px){
       .cardTop{ flex-direction: column; }
       .imgBox{
         width:100%;
         min-width: unset;
-        height: 190px;
+        height: 200px;
       }
     }
 
@@ -191,13 +219,17 @@
       height:100%;
       object-fit: cover;
       display:block;
+      transition: transform .3s ease;
+    }
+    .card:hover .imgBox img{
+      transform: scale(1.05);
     }
 
     .content{
       flex:1;
       display:flex;
       flex-direction:column;
-      gap: 10px;
+      gap: 12px;
       min-width: 0;
     }
     .titleRow{
@@ -205,21 +237,23 @@
       align-items:flex-start;
       justify-content:space-between;
       gap: 10px;
+      flex-wrap: wrap;
     }
     .title{
       margin:0;
-      font-size: 16px;
-      line-height:1.2;
+      font-size: 17px;
+      line-height:1.3;
+      font-weight: 700;
     }
     .pill{
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding: 6px 10px;
+      gap:6px;
+      padding: 6px 11px;
       border-radius:999px;
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 700;
-      letter-spacing:.2px;
+      letter-spacing:.3px;
       border:1px solid rgba(234,242,255,.16);
       background: rgba(234,242,255,.08);
       color: var(--text);
@@ -233,12 +267,12 @@
     .meta{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px 12px;
+      gap: 8px 14px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 13.5px;
     }
     .meta b{ color: var(--text); font-weight: 700; }
-    @media (max-width: 520px){
+    @media (max-width: 600px){
       .meta{ grid-template-columns: 1fr; }
     }
 
@@ -246,7 +280,7 @@
       display:flex;
       flex-wrap:wrap;
       gap: 10px;
-      padding: 0 14px 14px;
+      padding: 0 16px 16px;
       align-items:center;
     }
 
@@ -254,54 +288,58 @@
       appearance:none;
       border: none;
       cursor:pointer;
-      border-radius: 14px;
-      padding: 10px 12px;
-      font-weight: 750;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
       font-size: 13px;
-      letter-spacing:.15px;
+      letter-spacing:.2px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap: 8px;
+      gap: 7px;
       text-decoration:none;
       user-select:none;
-      transition: transform .06s ease, filter .15s ease, opacity .15s ease;
+      transition: all .15s ease;
       transform: translateY(0);
       white-space: nowrap;
     }
-    .btn:active{ transform: translateY(1px); }
+    .btn:active:not(.btnDisabled){ transform: translateY(1px); }
     .btnPrimary{
       background: linear-gradient(180deg, var(--w-red-600), #B8000E);
       color:#fff;
-      box-shadow: 0 10px 24px rgba(230,0,18,.22);
+      box-shadow: 0 8px 20px rgba(230,0,18,.22);
     }
     .btnBlue{
       background: linear-gradient(180deg, var(--w-blue-700), var(--w-blue-800));
       color:#fff;
-      box-shadow: 0 10px 24px rgba(11,77,162,.20);
+      box-shadow: 0 8px 20px rgba(11,77,162,.20);
     }
     .btnGhost{
       background: rgba(234,242,255,.10);
       border:1px solid rgba(234,242,255,.18);
       color: var(--text);
     }
+    .btn:hover:not(.btnDisabled){ 
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
     .btnWhats{
       background: linear-gradient(180deg, #25D366, #128C7E);
       color:#fff;
-      box-shadow: 0 10px 24px rgba(37,211,102,.18);
+      box-shadow: 0 8px 20px rgba(37,211,102,.25);
+      font-weight: 800;
     }
-    .btn:hover{ filter: brightness(1.04); }
 
-    /* Disabled buttons (when no link / no data) */
     .btnDisabled{
-      opacity: .45;
+      opacity: .4;
       cursor: not-allowed;
       pointer-events: none;
-      filter: grayscale(.25);
+      filter: grayscale(.3);
     }
 
     .tableWrap{
-      padding: 0 14px 14px;
+      padding: 0 16px 16px;
       display:none;
     }
     .tableWrap.open{ display:block; }
@@ -311,12 +349,12 @@
       border-collapse:separate;
       border-spacing:0;
       overflow:hidden;
-      border-radius: 14px;
+      border-radius: 12px;
       border:1px solid rgba(234,242,255,.12);
       background: rgba(4,18,38,.55);
     }
     th, td{
-      padding: 10px 10px;
+      padding: 11px 12px;
       text-align:left;
       font-size: 13px;
       border-bottom:1px solid rgba(234,242,255,.08);
@@ -327,39 +365,36 @@
       background: rgba(11,77,162,.18);
       border-bottom:1px solid rgba(234,242,255,.12);
       font-size: 12.5px;
-      letter-spacing:.2px;
+      letter-spacing:.3px;
+      font-weight: 700;
     }
     tr:last-child td{ border-bottom:none; }
     td{
       color: rgba(234,242,255,.86);
     }
-
-    .rentalBox{
-      border-radius: 14px;
-      border:1px solid rgba(234,242,255,.12);
-      background: rgba(4,18,38,.55);
-      padding: 12px 12px;
-      color: rgba(234,242,255,.88);
-      font-size: 13px;
-      line-height: 1.35;
-    }
-    .rentalBox b{ color:#fff; }
-
+    
     .foot{
-      padding: 12px 14px 16px;
+      padding: 14px 20px 18px;
       color: rgba(234,242,255,.65);
-      font-size: 12px;
+      font-size: 12.5px;
       border-top:1px solid var(--border);
       background: rgba(7,27,51,.35);
+      line-height: 1.6;
     }
 
     .empty{
-      padding: 24px 14px 28px;
+      padding: 40px 20px 50px;
       color: rgba(234,242,255,.78);
       text-align:center;
-      font-size: 14px;
+      font-size: 15px;
     }
     .empty b{ color:#fff; }
+
+    .icon{
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+    }
   </style>
 </head>
 
@@ -367,80 +402,63 @@
   <div class="wrap">
     <div class="header">
       <div class="brand">
-        <div class="badge"><span class="dot"></span> Catálogo interno (USD) – Weichai</div>
-        <h1>Buscador por potencia – Generadores y Motores</h1>
-        <p class="sub">Elegí una potencia. Si hay potencias repetidas, vas a ver un tag corto (Diesel / Premium / Gas / Motor) para diferenciar.</p>
+        <div class="badge"><span class="dot"></span> Stock disponible (USD) – Weichai Power</div>
+        <h1>Buscador de Generadores y Motores</h1>
+        <p class="sub">Explorá nuestro catálogo completo. Filtrá por potencia, tipo de combustible o buscá directamente por modelo.</p>
       </div>
     </div>
 
     <div class="panel">
       <div class="controls">
         <div>
-          <label for="powerSelect">Potencia</label>
+          <label for="powerSelect">🔌 Filtrar por Potencia</label>
           <select id="powerSelect" class="select"></select>
         </div>
         <div>
-          <label for="quickSearch">Búsqueda rápida (opcional)</label>
-          <input id="quickSearch" class="search" type="text" placeholder="Ej: WPG55L1, 70KVA, motor, premium..." />
+          <label for="fuelSelect">⚡ Tipo de Combustible</label>
+          <select id="fuelSelect" class="select">
+            <option value="__ALL__">Todos los tipos</option>
+            <option value="diesel">Diesel</option>
+            <option value="gas">Gas</option>
+            <option value="premium">Premium</option>
+            <option value="motor">Motor</option>
+          </select>
+        </div>
+        <div>
+          <label for="quickSearch">🔍 Búsqueda rápida</label>
+          <input id="quickSearch" class="search" type="text" placeholder="Modelo, potencia, descripción..." />
         </div>
       </div>
+      
+      <div id="stats" class="stats"></div>
+      
       <div class="hint">
-        • Los <b>motores</b> no tienen repuestos/folleto/imagen (por ahora).<br/>
-        • El generador <b>312 kVA</b> está marcado como <b>GAS</b> (los demás generadores: diésel / premium).<br/>
-        • <b>Rental</b>: referencia informativa (condiciones se coordinan luego).
+        💡 <b>Tip:</b> Todos los precios están en USD. Los botones de descarga y visualización funcionan con enlaces de Google Drive compartidos públicamente.
       </div>
 
       <div id="results" class="grid"></div>
       <div id="empty" class="empty" style="display:none;">
-        No encontré resultados con esos filtros. Probá limpiar la búsqueda rápida o elegir otra potencia.
+        <b>🔍 No encontramos resultados</b><br>
+        Probá ajustando los filtros o la búsqueda rápida.
       </div>
 
       <div class="foot">
-        Consejo práctico: para que “Ver/Descargar” funcione perfecto, los archivos de Drive deben estar en <b>“Cualquier persona con el enlace puede ver”</b>.
+        <b>📌 Nota importante:</b> Para que los botones "Ver" y "Descargar" funcionen correctamente, asegurate de que los archivos en Google Drive tengan permisos de <b>"Cualquier persona con el enlace puede ver"</b>.
       </div>
     </div>
   </div>
 
   <script>
-    // -----------------------------
-    // Helpers: Google Drive links
-    // -----------------------------
-    function extractDriveId(url){
-      if(!url || typeof url !== "string") return null;
-      const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-      if(m && m[1]) return m[1];
-      const m2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-      if(m2 && m2[1]) return m2[1];
-      return null;
-    }
-
-    function driveViewUrl(url){
-      const id = extractDriveId(url);
-      if(!id) return url;
-      return `https://drive.google.com/uc?export=view&id=${id}`;
-    }
-
-    function driveDownloadUrl(url){
-      const id = extractDriveId(url);
-      if(!id) return url;
-      return `https://drive.google.com/uc?export=download&id=${id}`;
-    }
-
-    // -----------------------------
-    // Data
-    // -----------------------------
     const CURRENCY = "USD";
 
     const PRODUCTS = [
-      // ---------------- GENERADORES ----------------
       {
         kind: "generador",
         fuel: "diesel",
         description: "GENERADOR CABINADO",
         potencia: "22KVA/18KW",
         productNo: "WPG22L1",
-        priceUsd: "13.962,64",
-        rentalUsd: "1.551,40",
+        priceUsd: "12.492,62",
         brochureUrl: "https://drive.google.com/file/d/1Fu0HCP_qpFG3PLb8NPpsvB4Bc_v9JpX7/view?usp=drive_link",
         photoUrl: "",
         preventiveParts: [
@@ -471,15 +489,50 @@
           { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
         ]
       },
-
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR SIN CABINA",
+        potencia: "22KVA/18KW",
+        productNo: "WPG22F1",
+        priceUsd: "9.000,77",
+        brochureUrl: "https://drive.google.com/file/d/1Fu0HCP_qpFG3PLb8NPpsvB4Bc_v9JpX7/view?usp=drive_link",
+        photoUrl: "",
+        preventiveParts: [
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002525224", priceUsd:"27,44" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002003753", priceUsd:"31,73" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1000622860", priceUsd:"9,09" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"2B0900006 / AV17X940L", priceUsd:"7,84" },
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1000940409", priceUsd:"70,88" },
+        ],
+        correctiveParts: [
+          { desc:"Bomba inyectora", productNo:"1003896473", priceUsd:"560,39" },
+          { desc:"Junta bomba inyectora", productNo:"1000852702", priceUsd:"1,11" },
+          { desc:"Inyector", productNo:"1015968934", priceUsd:"64,02" },
+          { desc:"Inyector", productNo:"2010924", priceUsd:"67,06" },
+          { desc:"Junta multiple escape", productNo:"1000184083", priceUsd:"2,60" },
+          { desc:"Bulon escape", productNo:"1000071147", priceUsd:"2,33" },
+          { desc:"Bomba de agua", productNo:"1002262420", priceUsd:"200,71" },
+          { desc:"Junta bomba de agua", productNo:"1000795642", priceUsd:"0,84" },
+          { desc:"Termostato", productNo:"21033-72-K/155B", priceUsd:"15,36" },
+          { desc:"Junta termostato", productNo:"1000846528", priceUsd:"0,57" },
+          { desc:"Motor de arranque", productNo:"1001538960", priceUsd:"307,06" },
+          { desc:"Alternador", productNo:"2085090110", priceUsd:"153,26" },
+          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
+          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
+          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
+          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
+        ]
+      },
       {
         kind: "generador",
         fuel: "diesel",
         description: "GENERADOR CABINADO",
         potencia: "41KVA / 33KW",
         productNo: "WPG41L1",
-        priceUsd: "16.308,46",
-        rentalUsd: "1.812,05",
+        priceUsd: "14.591,78",
         brochureUrl: "https://drive.google.com/file/d/1BkwfIoCqncz4yidg7bvvH9lURYkg7eyo/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1MkY6AUN_ls-4CPaVfJ-vumhrkPxGccQA/view?usp=drive_link",
         preventiveParts: [
@@ -499,56 +552,6 @@
           { desc:"Junta termostato", productNo:"1000846528", priceUsd:"0,57" },
           { desc:"Alternador", productNo:"2085090110", priceUsd:"153,26" },
           { desc:"Motor de arranque", productNo:"1001557368", priceUsd:"291,63" },
-          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
-          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
-          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
-          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
-          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
-          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
-          { desc:"Turbo", productNo:"1001836952", priceUsd:"889,79" },
-          { desc:"Bulon escape", productNo:"1000071147", priceUsd:"2,33" },
-          { desc:"Junta multiple escape", productNo:"2060008", priceUsd:"0,51" },
-          { desc:"Junta salida turbo", productNo:"1001228133", priceUsd:"4,62" },
-          { desc:"Junta turbo", productNo:"1000757316", priceUsd:"1,69" },
-          { desc:"Junta descarga turbo", productNo:"2067800", priceUsd:"0,81" },
-        ]
-      },
-
-      {
-        kind: "generador",
-        fuel: "diesel",
-        description: "GENERADOR CABINADO",
-        potencia: "55KVA / 44KW",
-        productNo: "WPG55L1",
-        priceUsd: "17.074,54",
-        rentalUsd: "1.897,17",
-        brochureUrl: "https://drive.google.com/file/d/1QopodZz0JGrYKJscZhSEdM6vBCz4wkZs/view?usp=drive_link",
-        photoUrl: "https://drive.google.com/file/d/1JkPPFYKiTAqE-ADcoW7Yv06Wq8Bwq4u1/view?usp=drive_link",
-        preventiveParts: [
-          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1001069804 / 13069543", priceUsd:"69,04" },
-          { desc:"Filtro de aceite (500 hs)", productNo:"1002084930", priceUsd:"22,70" },
-          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1008230153", priceUsd:"50,89" },
-          { desc:"Correa accesorios (2000 hs)", productNo:"1000686462 / AV17X1032", priceUsd:"7,42" },
-        ],
-        correctiveParts: [
-          { desc:"Termostato", productNo:"1000575996", priceUsd:"10,06" },
-          { desc:"Bomba de agua", productNo:"1008352096", priceUsd:"154,98" },
-          { desc:"Junta bomba de agua", productNo:"1000795642", priceUsd:"0,84" },
-          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
-          { desc:"Sensor de fase", productNo:"Z20310003", priceUsd:"70,34" },
-          { desc:"Sensor de bba gasoil", productNo:"1000001100", priceUsd:"135,51" },
-          { desc:"Sensor de velocidad", productNo:"612630030007", priceUsd:"23,86" },
-          { desc:"Sensor de temperatura", productNo:"612630060035", priceUsd:"15,66" },
-          { desc:"Sensor presión riel", productNo:"612600081585", priceUsd:"143,84" },
-          { desc:"Sensor de presión y temperatura", productNo:"612600090460", priceUsd:"74,12" },
-          { desc:"Sensor presión y temperatura refuerzo", productNo:"Z20310004", priceUsd:"61,19" },
-          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
-          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
-          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
-          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
-          { desc:"Bomba inyectora", productNo:"1000026163", priceUsd:"772,00" },
-          { desc:"Inyector", productNo:"1000000623", priceUsd:"342,53" },
-          { desc:"Motor de arranque", productNo:"1001557368", priceUsd:"291,63" },
           { desc:"Alternador", productNo:"1002093349", priceUsd:"303,62" },
           { desc:"Turbo", productNo:"1001836952", priceUsd:"889,79" },
           { desc:"Junta salida turbo", productNo:"1001228133", priceUsd:"4,62" },
@@ -558,15 +561,13 @@
           { desc:"Tuerca escape/turbo", productNo:"610800110349", priceUsd:"1,89" },
         ]
       },
-
       {
         kind: "generador",
         fuel: "diesel",
         description: "GENERADOR CABINADO",
         potencia: "70KVA / 55KW",
         productNo: "WPG70L1",
-        priceUsd: "20.099,52",
-        rentalUsd: "2.233,28",
+        priceUsd: "18.424,56",
         brochureUrl: "https://drive.google.com/file/d/1o3Y0IXATo_udBfwc9UHwgDrFTEHAM_5B/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1HA02gURsQdcA1IUiXiXsU1p_8Sv7FaA-/view?usp=drive_link",
         preventiveParts: [
@@ -600,7 +601,6 @@
           { desc:"Sensor de temperatura", productNo:"1002381183", priceUsd:"47,18" },
         ]
       },
-
       {
         kind: "generador",
         fuel: "diesel",
@@ -608,8 +608,7 @@
         potencia: "110kVA / 88kW",
         productNo: "WPG110L1",
         variant: "Standard",
-        priceUsd: "24.013,08",
-        rentalUsd: "2.668,12",
+        priceUsd: "22.011,99",
         brochureUrl: "https://drive.google.com/file/d/1Wf6634neuJGYfdHXx2EQZwwp_h9PnE2B/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/12tIsTuddCvN9GA6svsvQ1z1u5656exRX/view?usp=drive_link",
         preventiveParts: [
@@ -646,16 +645,14 @@
           { desc:"Sensor de temperatura", productNo:"1002381183", priceUsd:"47,18" },
         ]
       },
-
       {
         kind: "generador",
         fuel: "premium",
-        description: "GENERADORES DIESEL CAB. PREMIUM",
+        description: "GENERADOR CABINADO PREMIUM",
         potencia: "110kVA / 88kW",
         productNo: "WPG110L1",
         variant: "Premium",
-        priceUsd: "27.615,04",
-        rentalUsd: "3.068,34",
+        priceUsd: "22.258,88",
         brochureUrl: "https://drive.google.com/file/d/1Wf6634neuJGYfdHXx2EQZwwp_h9PnE2B/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1CugpJ3C-hVjdoSZff1mmmaZ9sGsqC1LK/view?usp=drive_link",
         preventiveParts: [
@@ -692,15 +689,13 @@
           { desc:"Sensor de temperatura", productNo:"1002381183", priceUsd:"47,18" },
         ]
       },
-
       {
         kind: "generador",
         fuel: "diesel",
         description: "GENERADOR CABINADO",
         potencia: "275kVA / 220kW",
         productNo: "WPG275L8",
-        priceUsd: "45.193,68",
-        rentalUsd: "5.021,52",
+        priceUsd: "41.427,54",
         brochureUrl: "https://drive.google.com/file/d/1ykvSRfz_qApLX30Pu7s6NMF-fga8jylM/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1yo03Ug_vlzKflqIS6DelUKHTw0dEtIai/view?usp=drive_link",
         preventiveParts: [
@@ -737,15 +732,13 @@
           { desc:"Sensor de velocidad", productNo:"612600190113", priceUsd:"84,71" },
         ]
       },
-
       {
         kind: "generador",
         fuel: "diesel",
         description: "GENERADOR CABINADO",
         potencia: "550KVA / 440KW",
         productNo: "WPG550L8",
-        priceUsd: "91.652,96",
-        rentalUsd: "10.183,66",
+        priceUsd: "79.593,36",
         brochureUrl: "https://drive.google.com/file/d/1kUJGi8n4HPohxhzVnslyGPqCzh1fiV3o/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1fAvwWl8hsw1c4hYRpJMOqM3_F8BeJMnt/view?usp=drive_link",
         preventiveParts: [
@@ -781,16 +774,13 @@
           { desc:"Sensor presión y temperatura refuerzo", productNo:"1002870099", priceUsd:"109,45" },
         ]
       },
-
-      // ---------------- GENERADOR GAS ----------------
       {
         kind: "generador",
         fuel: "gas",
-        description: "GENERADORES A GAS",
+        description: "GENERADOR A GAS",
         potencia: "312KVA/250KW",
         productNo: "WPG312L8NG",
-        priceUsd: "119.700,00",
-        rentalUsd: "13.300,00",
+        priceUsd: "119.000,00",
         brochureUrl: "",
         photoUrl: "",
         preventiveParts: [
@@ -821,34 +811,20 @@
           { desc:"Sensor de velocidad", productNo:"612600190113", priceUsd:"84,71" },
         ]
       },
-
-      // ---------------- MOTORES ----------------
-      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"33kVA / 30kW", productNo:"4M06G35/5", priceUsd:"5.947,20" },
-      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"50kVA / 45kW", productNo:"4M06G50/5", priceUsd:"6.708,24" },
-      { kind:"motor", description:"MOTORES DIESEL 1500RPM", potencia:"110kVA / 100kW", productNo:"4M10G110/5", priceUsd:"9.371,88" },
-      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"217 HP", productNo:"WD10G220E23", priceUsd:"17.584,56" },
-      { kind:"motor", description:"MOTORES DIESEL -ACELERACION VARIABLE", potencia:"123 HP", productNo:"WP6G125E22", priceUsd:"9.187,92" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"25 KW", productNo:"4M06G20/5", priceUsd:"5.155,92" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"66 KW", productNo:"4M10G70/5", priceUsd:"7.779,24" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"264 KW", productNo:"6M16G275/5", priceUsd:"21.848,40" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"499 KW", productNo:"6M21G550/5", priceUsd:"44.049,60" },
-      { kind:"motor", description:"MOTORES DIESEL", potencia:"70 KW", productNo:"4M10V4D0", priceUsd:"9.072,00" },
+      { kind:"motor", description:"MOTOR DIESEL 1500RPM", potencia:"33kVA / 30kW", productNo:"4M06G35/5", priceUsd:"5.451,60" },
+      { kind:"motor", description:"MOTOR DIESEL 1500RPM", potencia:"50kVA / 45kW", productNo:"4M06G50/5", priceUsd:"6.149,22" },
+      { kind:"motor", description:"MOTOR DIESEL 1500RPM", potencia:"110kVA / 100kW", productNo:"4M10G110/5", priceUsd:"8.590,89" },
+      { kind:"motor", description:"MOTOR DIESEL - ACELERACIÓN VARIABLE", potencia:"220kW", productNo:"WD10G220E23", priceUsd:"17.584,56" },
+      { kind:"motor", description:"MOTOR DIESEL - ACELERACIÓN VARIABLE", potencia:"125kW", productNo:"WP6G125E22", priceUsd:"9.187,92" },
+      { kind:"motor", description:"MOTOR DIESEL", potencia:"25 KW", productNo:"4M06G20/5", priceUsd:"5.155,92" },
+      { kind:"motor", description:"MOTOR DIESEL", potencia:"66 KW", productNo:"4M10G70/5", priceUsd:"7.779,24" },
+      { kind:"motor", description:"MOTOR DIESEL", potencia:"264 KW", productNo:"6M16G275/5", priceUsd:"21.848,40" },
+      { kind:"motor", description:"MOTOR DIESEL", potencia:"499 KW", productNo:"6M21G550/5", priceUsd:"44.049,60" },
+      { kind:"motor", description:"MOTOR DIESEL", potencia:"70 KW / 94 HP", productNo:"4M10V4D0", priceUsd:"9.072,00" },
     ];
 
-    // -----------------------------
-    // Dropdown + UI refs
-    // -----------------------------
-    const powerSelect = document.getElementById("powerSelect");
-    const quickSearch = document.getElementById("quickSearch");
-    const resultsEl = document.getElementById("results");
-    const emptyEl = document.getElementById("empty");
-
     function normalize(s){
-      return (s || "")
-        .toString()
-        .trim()
-        .toLowerCase()
-        .replace(/\s+/g, " ");
+      return (s || "").toString().trim().toLowerCase().replace(/\s+/g, " ");
     }
 
     function getPowerKey(potencia){
@@ -870,21 +846,54 @@
       return "diesel";
     }
 
-    function priceText(p){
-      return `${CURRENCY} ${p.priceUsd}`;
+    function extractDriveId(url){
+      if(!url || typeof url !== "string") return null;
+      const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if(m && m[1]) return m[1];
+      const m2 = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if(m2 && m2[1]) return m2[1];
+      return null;
     }
 
-    function rentalText(p){
-      const v = (p.rentalUsd || "").toString().trim();
-      return v ? `${CURRENCY} ${v}` : "";
+    function driveViewUrl(url){
+      const id = extractDriveId(url);
+      if(!id) return url;
+      return `https://drive.google.com/uc?export=view&id=${id}`;
     }
 
-    // Dropdown label: SOLO POTENCIA + TAG CORTO (manteniendo separación GEN/MOTOR)
-    function optionLabel(p){
-      const pot = (p.potencia || "").trim() ? p.potencia.trim() : "Sin especificar";
-      const tag = (p.kind === "motor") ? "Motor" : fuelLabel(p);
-      // No mostramos modelo ni descripción, solo potencia + tag corto
-      return `${pot} — ${tag}`;
+    function driveDownloadUrl(url){
+      const id = extractDriveId(url);
+      if(!id) return url;
+      return `https://drive.google.com/uc?export=download&id=${id}`;
+    }
+
+    function buildWhatsAppMessage(p){
+      const lines = [];
+      lines.push("📄 *COTIZACIÓN WEICHAI POWER*");
+      lines.push("");
+      const pot = (p.potencia && p.potencia.trim()) ? ` (${p.potencia.trim()})` : "";
+      const variant = p.variant ? ` - ${p.variant}` : "";
+      lines.push(`🔧 *Equipo:* ${p.productNo}${pot}${variant}`);
+      lines.push(`📦 *Descripción:* ${p.description || (p.kind === "motor" ? "MOTOR" : "EQUIPO")}`);
+      lines.push(`💰 *Precio:* USD ${p.priceUsd}`);
+      lines.push("");
+      if (Array.isArray(p.preventiveParts) && p.preventiveParts.length) {
+        lines.push("🛠️ *Repuestos preventivos disponibles*");
+      }
+      if (p.photoUrl && p.photoUrl.trim()) {
+        lines.push(`📷 *Ver foto:* ${p.photoUrl}`);
+      }
+      if (p.brochureUrl && p.brochureUrl.trim()) {
+        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
+      }
+      lines.push("");
+      lines.push("_Consultá stock y disponibilidad_");
+      return encodeURIComponent(lines.join("\n"));
+    }
+
+    function getWhatsAppUrl(p){
+      const text = buildWhatsAppMessage(p);
+      return `https://wa.me/?text=${text}`;
     }
 
     function sortByPowerThenModel(a,b){
@@ -899,12 +908,18 @@
       return ((a.variant||"").localeCompare((b.variant||""), "es", { numeric:true, sensitivity:"base" }));
     }
 
+    const powerSelect = document.getElementById("powerSelect");
+    const fuelSelect = document.getElementById("fuelSelect");
+    const quickSearch = document.getElementById("quickSearch");
+    const resultsEl = document.getElementById("results");
+    const emptyEl = document.getElementById("empty");
+    const statsEl = document.getElementById("stats");
+
     function buildDropdown(){
       powerSelect.innerHTML = "";
-
       const optAll = document.createElement("option");
       optAll.value = "__ALL__";
-      optAll.textContent = "Todos (Generadores + Motores)";
+      optAll.textContent = "Todas las potencias";
       powerSelect.appendChild(optAll);
 
       const gens = PRODUCTS.filter(p => p.kind === "generador").sort(sortByPowerThenModel);
@@ -914,8 +929,10 @@
       ogGen.label = "GENERADORES";
       for(const p of gens){
         const opt = document.createElement("option");
+        const pot = (p.potencia || "").trim() ? p.potencia.trim() : "Sin especificar";
+        const variant = p.variant ? ` - ${p.variant}` : "";
         opt.value = `${getPowerKey(p.potencia)}|||${p.productNo}|||${p.variant || ""}|||${p.kind}`;
-        opt.textContent = optionLabel(p);
+        opt.textContent = `${pot} — ${p.productNo}${variant}`;
         ogGen.appendChild(opt);
       }
 
@@ -923,8 +940,9 @@
       ogMot.label = "MOTORES";
       for(const p of motors){
         const opt = document.createElement("option");
+        const pot = (p.potencia || "").trim() ? p.potencia.trim() : "Sin especificar";
         opt.value = `${getPowerKey(p.potencia)}|||${p.productNo}|||${p.variant || ""}|||${p.kind}`;
-        opt.textContent = optionLabel(p);
+        opt.textContent = `${pot} — ${p.productNo}`;
         ogMot.appendChild(opt);
       }
 
@@ -932,79 +950,28 @@
       powerSelect.appendChild(ogMot);
     }
 
-    // -----------------------------
-    // WhatsApp Share
-    // -----------------------------
-    function buildWhatsAppMessageSale(p){
-      const lines = [];
-      lines.push("📄 *COTIZACIÓN WEICHAI POWER*");
-      lines.push("");
-      lines.push(`🔧 *Equipo:* ${p.productNo}${p.potencia ? " (" + p.potencia + ")" : ""}`);
-      lines.push(`📦 *Descripción:* ${p.description}`);
-      lines.push(`💰 *Precio venta:* USD ${p.priceUsd}`);
-      lines.push("");
-
-      if (Array.isArray(p.preventiveParts) && p.preventiveParts.length) {
-        lines.push("🛠️ *Repuestos preventivos:*");
-        p.preventiveParts.forEach(r => {
-          lines.push(`• ${r.desc} (${r.productNo}): USD ${r.priceUsd}`);
-        });
-        lines.push("");
-      }
-
-      if (p.photoUrl && p.photoUrl.trim()) {
-        lines.push(`📷 *Ver foto:* ${driveViewUrl(p.photoUrl)}`);
-      }
-      if (p.brochureUrl && p.brochureUrl.trim()) {
-        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
-      }
-      return encodeURIComponent(lines.join("\n"));
-    }
-
-    function buildWhatsAppMessageRental(p){
-      const lines = [];
-      lines.push("📄 *CONSULTA ALQUILER (RENTAL) – WEICHAI POWER*");
-      lines.push("");
-      lines.push(`🔧 *Equipo:* ${p.productNo}${p.potencia ? " (" + p.potencia + ")" : ""}`);
-      lines.push(`📦 *Descripción:* ${p.description}`);
-      lines.push(`💸 *Valor rental referencia:* USD ${p.rentalUsd}`);
-      lines.push("");
-
-      if (p.photoUrl && p.photoUrl.trim()) {
-        lines.push(`📷 *Ver foto:* ${driveViewUrl(p.photoUrl)}`);
-      }
-      if (p.brochureUrl && p.brochureUrl.trim()) {
-        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
-      }
-      return encodeURIComponent(lines.join("\n"));
-    }
-
-    function getWhatsAppUrlSale(p){
-      const text = buildWhatsAppMessageSale(p);
-      return `https://wa.me/?text=${text}`;
-    }
-
-    function getWhatsAppUrlRental(p){
-      const text = buildWhatsAppMessageRental(p);
-      return `https://wa.me/?text=${text}`;
-    }
-
-    // -----------------------------
-    // Rendering
-    // -----------------------------
     function render(){
-      const selected = powerSelect.value;
+      const selectedPower = powerSelect.value;
+      const selectedFuel = fuelSelect.value;
       const q = normalize(quickSearch.value);
 
       let filtered = [...PRODUCTS];
 
-      if(selected && selected !== "__ALL__"){
-        const [k, productNo, variant, kind] = selected.split("|||");
+      if(selectedPower && selectedPower !== "__ALL__"){
+        const [k, productNo, variant, kind] = selectedPower.split("|||");
         filtered = filtered.filter(p => {
           const pk = getPowerKey(p.potencia);
           const pv = (p.variant || "");
           return pk === k && p.productNo === productNo && pv === variant && p.kind === kind;
         });
+      }
+
+      if(selectedFuel && selectedFuel !== "__ALL__"){
+        if(selectedFuel === "motor"){
+          filtered = filtered.filter(p => p.kind === "motor");
+        } else {
+          filtered = filtered.filter(p => p.kind === "generador" && p.fuel === selectedFuel);
+        }
       }
 
       if(q){
@@ -1020,6 +987,15 @@
           return hay.includes(q);
         });
       }
+
+      const totalGens = filtered.filter(p => p.kind === "generador").length;
+      const totalMotors = filtered.filter(p => p.kind === "motor").length;
+      
+      statsEl.innerHTML = `
+        <div class="stat-item">📊 <b>${filtered.length}</b> resultados</div>
+        <div class="stat-item">⚡ <b>${totalGens}</b> generadores</div>
+        <div class="stat-item">🔧 <b>${totalMotors}</b> motores</div>
+      `;
 
       resultsEl.innerHTML = "";
       emptyEl.style.display = filtered.length ? "none" : "block";
@@ -1045,7 +1021,9 @@
         img.alt = `${p.description} ${p.productNo}`;
         img.src = driveViewUrl(p.photoUrl);
         img.loading = "lazy";
-        img.onerror = () => imgBox.classList.add("hidden");
+        img.onerror = () => {
+          imgBox.classList.add("hidden");
+        };
         imgBox.appendChild(img);
       } else {
         imgBox.classList.add("hidden");
@@ -1074,9 +1052,9 @@
 
       const potenciaTxt = (p.potencia && p.potencia.trim()) ? p.potencia.trim() : "Sin especificar";
       meta.innerHTML = `
-        <div><b>Potencia:</b> ${escapeHtml(potenciaTxt)}</div>
+        <div><b>Potencia:</b> ${potenciaTxt}</div>
         <div><b>Modelo:</b> ${escapeHtml(p.productNo)}</div>
-        <div><b>Precio:</b> ${escapeHtml(priceText(p))}</div>
+        <div><b>Precio:</b> ${CURRENCY} ${escapeHtml(p.priceUsd)}</div>
         <div><b>Tipo:</b> ${p.kind === "motor" ? "Motor" : "Generador"}</div>
       `;
 
@@ -1089,107 +1067,57 @@
       const actions = document.createElement("div");
       actions.className = "actions";
 
-      // --- FOTO
+      const btnWa = document.createElement("a");
+      btnWa.className = "btn btnWhats";
+      btnWa.innerHTML = `<svg class="icon" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Compartir por WhatsApp`;
+      btnWa.href = getWhatsAppUrl(p);
+      btnWa.target = "_blank";
+      btnWa.rel = "noopener noreferrer";
+      actions.appendChild(btnWa);
+
       const viewImg = document.createElement("a");
       viewImg.className = "btn btnGhost";
-      viewImg.textContent = "Ver foto";
+      viewImg.textContent = "📷 Ver foto";
       if(hasPhoto){
         viewImg.href = p.photoUrl;
         viewImg.target = "_blank";
         viewImg.rel = "noopener noreferrer";
       } else {
         viewImg.classList.add("btnDisabled");
-        viewImg.title = "Sin foto cargada";
+        viewImg.title = "Sin foto disponible";
         viewImg.href = "javascript:void(0)";
       }
+      actions.appendChild(viewImg);
 
       const dlImg = document.createElement("a");
       dlImg.className = "btn btnBlue";
-      dlImg.textContent = "Descargar foto";
+      dlImg.textContent = "⬇️ Descargar foto";
       if(hasPhoto){
         dlImg.href = driveDownloadUrl(p.photoUrl);
         dlImg.target = "_blank";
         dlImg.rel = "noopener noreferrer";
       } else {
         dlImg.classList.add("btnDisabled");
-        dlImg.title = "Sin foto cargada";
+        dlImg.title = "Sin foto disponible";
         dlImg.href = "javascript:void(0)";
       }
+      actions.appendChild(dlImg);
 
-      // --- FOLLETO
       const hasBrochure = !!(p.brochureUrl && p.brochureUrl.trim());
       const dlBro = document.createElement("a");
       dlBro.className = "btn btnPrimary";
-      dlBro.textContent = "Descargar folleto";
+      dlBro.textContent = "📄 Descargar catálogo";
       if(hasBrochure){
         dlBro.href = driveDownloadUrl(p.brochureUrl);
         dlBro.target = "_blank";
         dlBro.rel = "noopener noreferrer";
       } else {
         dlBro.classList.add("btnDisabled");
-        dlBro.title = "Sin folleto cargado";
+        dlBro.title = "Sin catálogo disponible";
         dlBro.href = "javascript:void(0)";
       }
-
-      actions.appendChild(viewImg);
-      actions.appendChild(dlImg);
       actions.appendChild(dlBro);
 
-      // -----------------------------
-      // Rental (solo generadores)
-      // -----------------------------
-      const hasRental = (p.kind === "generador") && (p.rentalUsd && p.rentalUsd.toString().trim());
-
-      const rentalWrap = document.createElement("div");
-      rentalWrap.className = "tableWrap";
-
-      const btnRental = document.createElement("button");
-      btnRental.className = "btn btnGhost";
-      btnRental.type = "button";
-      btnRental.textContent = "Valor rental referencia";
-
-      if(hasRental){
-        btnRental.onclick = () => {
-          rentalWrap.classList.toggle("open");
-          btnRental.textContent = rentalWrap.classList.contains("open")
-            ? "Ocultar valor rental"
-            : "Valor rental referencia";
-        };
-        const box = document.createElement("div");
-        box.className = "rentalBox";
-        box.innerHTML = `<b>Valor rental referencia:</b> ${escapeHtml(rentalText(p))}`;
-        rentalWrap.appendChild(box);
-        actions.appendChild(btnRental);
-      }
-
-      // -----------------------------
-      // WhatsApp (2 botones)
-      // -----------------------------
-      const btnWASale = document.createElement("a");
-      btnWASale.className = "btn btnWhats";
-      btnWASale.textContent = "Compartir venta";
-      btnWASale.href = getWhatsAppUrlSale(p);
-      btnWASale.target = "_blank";
-      btnWASale.rel = "noopener noreferrer";
-      actions.appendChild(btnWASale);
-
-      const btnWARental = document.createElement("a");
-      btnWARental.className = "btn btnWhats";
-      btnWARental.textContent = "Compartir alquiler";
-      if(hasRental){
-        btnWARental.href = getWhatsAppUrlRental(p);
-        btnWARental.target = "_blank";
-        btnWARental.rel = "noopener noreferrer";
-      } else {
-        btnWARental.classList.add("btnDisabled");
-        btnWARental.title = "Rental disponible solo en generadores";
-        btnWARental.href = "javascript:void(0)";
-      }
-      actions.appendChild(btnWARental);
-
-      // -----------------------------
-      // REPUESTOS
-      // -----------------------------
       const hasPreventive = Array.isArray(p.preventiveParts) && p.preventiveParts.length > 0;
       const hasCorrective = Array.isArray(p.correctiveParts) && p.correctiveParts.length > 0;
 
@@ -1202,43 +1130,41 @@
       const btnPrev = document.createElement("button");
       btnPrev.className = "btn btnGhost";
       btnPrev.type = "button";
-      btnPrev.textContent = "Repuestos preventivos";
+      btnPrev.textContent = "🔧 Repuestos preventivos";
       if(hasPreventive){
         btnPrev.onclick = () => {
           prevWrap.classList.toggle("open");
           btnPrev.textContent = prevWrap.classList.contains("open")
-            ? "Ocultar repuestos preventivos"
-            : "Repuestos preventivos";
+            ? "▲ Ocultar preventivos"
+            : "🔧 Repuestos preventivos";
         };
         prevWrap.appendChild(buildPartsTable(p.preventiveParts));
       } else {
         btnPrev.classList.add("btnDisabled");
         btnPrev.title = "Sin repuestos preventivos";
       }
+      actions.appendChild(btnPrev);
 
       const btnCorr = document.createElement("button");
       btnCorr.className = "btn btnGhost";
       btnCorr.type = "button";
-      btnCorr.textContent = "Repuestos correctivos";
+      btnCorr.textContent = "⚙️ Repuestos correctivos";
       if(hasCorrective){
         btnCorr.onclick = () => {
           corrWrap.classList.toggle("open");
           btnCorr.textContent = corrWrap.classList.contains("open")
-            ? "Ocultar repuestos correctivos"
-            : "Repuestos correctivos";
+            ? "▲ Ocultar correctivos"
+            : "⚙️ Repuestos correctivos";
         };
         corrWrap.appendChild(buildPartsTable(p.correctiveParts));
       } else {
         btnCorr.classList.add("btnDisabled");
         btnCorr.title = "Sin repuestos correctivos";
       }
-
-      actions.appendChild(btnPrev);
       actions.appendChild(btnCorr);
 
       card.appendChild(top);
       card.appendChild(actions);
-      if(hasRental) card.appendChild(rentalWrap);
       if(hasPreventive) card.appendChild(prevWrap);
       if(hasCorrective) card.appendChild(corrWrap);
 
@@ -1247,13 +1173,12 @@
 
     function buildPartsTable(items){
       const table = document.createElement("table");
-
       const thead = document.createElement("thead");
       thead.innerHTML = `
         <tr>
-          <th style="width:46%">Descripción</th>
-          <th style="width:26%">N° Producto</th>
-          <th style="width:28%">Precio (USD)</th>
+          <th style="width:48%">Descripción</th>
+          <th style="width:28%">N° Producto</th>
+          <th style="width:24%">Precio (USD)</th>
         </tr>
       `;
       table.appendChild(thead);
@@ -1282,19 +1207,66 @@
         .replaceAll("'","&#039;");
     }
 
-    // -----------------------------
-    // Init
-    // -----------------------------
     buildDropdown();
     render();
 
     powerSelect.addEventListener("change", render);
+    fuelSelect.addEventListener("change", render);
     quickSearch.addEventListener("input", () => {
       window.requestAnimationFrame(render);
     });
   </script>
 </body>
-</html>
+</html>63" },
+          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
+          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
+          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
+          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Sensor de velocidad", productNo:"1001668438", priceUsd:"73,20" },
+          { desc:"Turbo", productNo:"1001836952", priceUsd:"889,79" },
+          { desc:"Bulon escape", productNo:"1000071147", priceUsd:"2,33" },
+          { desc:"Junta multiple escape", productNo:"2060008", priceUsd:"0,51" },
+          { desc:"Junta salida turbo", productNo:"1001228133", priceUsd:"4,62" },
+          { desc:"Junta turbo", productNo:"1000757316", priceUsd:"1,69" },
+          { desc:"Junta descarga turbo", productNo:"2067800", priceUsd:"0,81" },
+        ]
+      },
+      {
+        kind: "generador",
+        fuel: "diesel",
+        description: "GENERADOR CABINADO",
+        potencia: "55KVA / 44KW",
+        productNo: "WPG55L1",
+        priceUsd: "15.277,22",
+        brochureUrl: "https://drive.google.com/file/d/1QopodZz0JGrYKJscZhSEdM6vBCz4wkZs/view?usp=drive_link",
+        photoUrl: "https://drive.google.com/file/d/1JkPPFYKiTAqE-ADcoW7Yv06Wq8Bwq4u1/view?usp=drive_link",
+        preventiveParts: [
+          { desc:"Filtro de aire (500 hs Revisión / 1000 hs)", productNo:"1001069804 / 13069543", priceUsd:"69,04" },
+          { desc:"Filtro de aceite (500 hs)", productNo:"1002084930", priceUsd:"22,70" },
+          { desc:"Filtro de gasoil primario (500 hs)", productNo:"1008230153", priceUsd:"50,89" },
+          { desc:"Correa accesorios (2000 hs)", productNo:"1000686462 / AV17X1032", priceUsd:"7,42" },
+        ],
+        correctiveParts: [
+          { desc:"Termostato", productNo:"1000575996", priceUsd:"10,06" },
+          { desc:"Bomba de agua", productNo:"1008352096", priceUsd:"154,98" },
+          { desc:"Junta bomba de agua", productNo:"1000795642", priceUsd:"0,84" },
+          { desc:"Junta tapa de valvula", productNo:"2085040115", priceUsd:"6,08" },
+          { desc:"Sensor de fase", productNo:"Z20310003", priceUsd:"70,34" },
+          { desc:"Sensor de bba gasoil", productNo:"1000001100", priceUsd:"135,51" },
+          { desc:"Sensor de velocidad", productNo:"612630030007", priceUsd:"23,86" },
+          { desc:"Sensor de temperatura", productNo:"612630060035", priceUsd:"15,66" },
+          { desc:"Sensor presión riel", productNo:"612600081585", priceUsd:"143,84" },
+          { desc:"Sensor de presión y temperatura", productNo:"612600090460", priceUsd:"74,12" },
+          { desc:"Sensor presión y temperatura refuerzo", productNo:"Z20310004", priceUsd:"61,19" },
+          { desc:"Sensor de temperatura", productNo:"612600090672", priceUsd:"42,32" },
+          { desc:"Sensor de presion", productNo:"P00000360111", priceUsd:"100,98" },
+          { desc:"Reten delantero", productNo:"2021995", priceUsd:"4,49" },
+          { desc:"Reten trasero", productNo:"2021942", priceUsd:"8,67" },
+          { desc:"Bomba inyectora", productNo:"1000026163", priceUsd:"772,00" },
+          { desc:"Inyector", productNo:"1000000623", priceUsd:"342,53" },
+          { desc:"Motor de arranque", productNo:"1001557368", priceUsd:"291,
+
 
 
 
