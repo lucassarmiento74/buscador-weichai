@@ -373,6 +373,17 @@
       color: rgba(234,242,255,.86);
     }
     
+    .rentalBox{
+      border-radius: 14px;
+      border:1px solid rgba(234,242,255,.12);
+      background: rgba(4,18,38,.55);
+      padding: 12px 14px;
+      color: rgba(234,242,255,.88);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+    .rentalBox b{ color:#fff; }
+    
     .foot{
       padding: 14px 20px 18px;
       color: rgba(234,242,255,.65);
@@ -459,6 +470,7 @@
         potencia: "22KVA/18KW",
         productNo: "WPG22L1",
         priceUsd: "12.492,62",
+        rentalUsd: "1.388,07",
         brochureUrl: "https://drive.google.com/file/d/1Fu0HCP_qpFG3PLb8NPpsvB4Bc_v9JpX7/view?usp=drive_link",
         photoUrl: "",
         preventiveParts: [
@@ -496,6 +508,7 @@
         potencia: "22KVA/18KW",
         productNo: "WPG22F1",
         priceUsd: "9.000,77",
+        rentalUsd: "1.000,09",
         brochureUrl: "https://drive.google.com/file/d/1Fu0HCP_qpFG3PLb8NPpsvB4Bc_v9JpX7/view?usp=drive_link",
         photoUrl: "",
         preventiveParts: [
@@ -533,6 +546,7 @@
         potencia: "41KVA / 33KW",
         productNo: "WPG41L1",
         priceUsd: "14.591,78",
+        rentalUsd: "1.621,31",
         brochureUrl: "https://drive.google.com/file/d/1BkwfIoCqncz4yidg7bvvH9lURYkg7eyo/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1MkY6AUN_ls-4CPaVfJ-vumhrkPxGccQA/view?usp=drive_link",
         preventiveParts: [
@@ -573,6 +587,7 @@
         potencia: "55KVA / 44KW",
         productNo: "WPG55L1",
         priceUsd: "15.277,22",
+        rentalUsd: "1.697,47",
         brochureUrl: "https://drive.google.com/file/d/1QopodZz0JGrYKJscZhSEdM6vBCz4wkZs/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1JkPPFYKiTAqE-ADcoW7Yv06Wq8Bwq4u1/view?usp=drive_link",
         preventiveParts: [
@@ -616,6 +631,7 @@
         potencia: "70KVA / 55KW",
         productNo: "WPG70L1",
         priceUsd: "18.424,56",
+        rentalUsd: "2.047,17",
         brochureUrl: "https://drive.google.com/file/d/1o3Y0IXATo_udBfwc9UHwgDrFTEHAM_5B/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1HA02gURsQdcA1IUiXiXsU1p_8Sv7FaA-/view?usp=drive_link",
         preventiveParts: [
@@ -657,6 +673,7 @@
         productNo: "WPG110L1",
         variant: "Standard",
         priceUsd: "22.011,99",
+        rentalUsd: "2.445,78",
         brochureUrl: "https://drive.google.com/file/d/1Wf6634neuJGYfdHXx2EQZwwp_h9PnE2B/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/12tIsTuddCvN9GA6svsvQ1z1u5656exRX/view?usp=drive_link",
         preventiveParts: [
@@ -701,6 +718,7 @@
         productNo: "WPG110L1",
         variant: "Premium",
         priceUsd: "25.041,24",
+        rentalUsd: "2.782,36",
         brochureUrl: "https://drive.google.com/file/d/1Wf6634neuJGYfdHXx2EQZwwp_h9PnE2B/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1CugpJ3C-hVjdoSZff1mmmaZ9sGsqC1LK/view?usp=drive_link",
         preventiveParts: [
@@ -744,6 +762,7 @@
         potencia: "275kVA / 220kW",
         productNo: "WPG275L8",
         priceUsd: "41.427,54",
+        rentalUsd: "4.603,06",
         brochureUrl: "https://drive.google.com/file/d/1ykvSRfz_qApLX30Pu7s6NMF-fga8jylM/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1yo03Ug_vlzKflqIS6DelUKHTw0dEtIai/view?usp=drive_link",
         preventiveParts: [
@@ -787,6 +806,7 @@
         potencia: "550KVA / 440KW",
         productNo: "WPG550L8",
         priceUsd: "79.593,36",
+        rentalUsd: "8.843,71",
         brochureUrl: "https://drive.google.com/file/d/1kUJGi8n4HPohxhzVnslyGPqCzh1fiV3o/view?usp=drive_link",
         photoUrl: "https://drive.google.com/file/d/1fAvwWl8hsw1c4hYRpJMOqM3_F8BeJMnt/view?usp=drive_link",
         preventiveParts: [
@@ -829,6 +849,7 @@
         potencia: "312KVA/250KW",
         productNo: "WPG312L8NG",
         priceUsd: "119.000,00",
+        rentalUsd: "13.222,22",
         brochureUrl: "",
         photoUrl: "",
         preventiveParts: [
@@ -939,8 +960,34 @@
       return encodeURIComponent(lines.join("\n"));
     }
 
+    function buildWhatsAppRentalMessage(p){
+      const lines = [];
+      lines.push("📄 *CONSULTA RENTAL WEICHAI POWER*");
+      lines.push("");
+      const pot = (p.potencia && p.potencia.trim()) ? ` (${p.potencia.trim()})` : "";
+      const variant = p.variant ? ` - ${p.variant}` : "";
+      lines.push(`🔧 *Equipo:* ${p.productNo}${pot}${variant}`);
+      lines.push(`📦 *Descripción:* ${p.description}`);
+      lines.push(`💸 *Valor rental mensual:* USD ${p.rentalUsd}`);
+      lines.push("");
+      if (p.photoUrl && p.photoUrl.trim()) {
+        lines.push(`📷 *Ver foto:* ${p.photoUrl}`);
+      }
+      if (p.brochureUrl && p.brochureUrl.trim()) {
+        lines.push(`📘 *Catálogo técnico:* ${p.brochureUrl}`);
+      }
+      lines.push("");
+      lines.push("_Consultá disponibilidad y condiciones de alquiler_");
+      return encodeURIComponent(lines.join("\n"));
+    }
+
     function getWhatsAppUrl(p){
       const text = buildWhatsAppMessage(p);
+      return `https://wa.me/?text=${text}`;
+    }
+
+    function getWhatsAppRentalUrl(p){
+      const text = buildWhatsAppRentalMessage(p);
       return `https://wa.me/?text=${text}`;
     }
 
@@ -1117,11 +1164,27 @@
 
       const btnWa = document.createElement("a");
       btnWa.className = "btn btnWhats";
-      btnWa.innerHTML = `<svg class="icon" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Compartir por WhatsApp`;
+      btnWa.innerHTML = `<svg class="icon" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Compartir venta`;
       btnWa.href = getWhatsAppUrl(p);
       btnWa.target = "_blank";
       btnWa.rel = "noopener noreferrer";
       actions.appendChild(btnWa);
+
+      const hasRental = (p.kind === "generador") && (p.rentalUsd && p.rentalUsd.toString().trim());
+      
+      const btnWaRental = document.createElement("a");
+      btnWaRental.className = "btn btnWhats";
+      btnWaRental.innerHTML = `<svg class="icon" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Compartir rental`;
+      if(hasRental){
+        btnWaRental.href = getWhatsAppRentalUrl(p);
+        btnWaRental.target = "_blank";
+        btnWaRental.rel = "noopener noreferrer";
+      } else {
+        btnWaRental.classList.add("btnDisabled");
+        btnWaRental.title = "Rental disponible solo en generadores";
+        btnWaRental.href = "javascript:void(0)";
+      }
+      actions.appendChild(btnWaRental);
 
       const viewImg = document.createElement("a");
       viewImg.className = "btn btnGhost";
@@ -1169,6 +1232,28 @@
       const hasPreventive = Array.isArray(p.preventiveParts) && p.preventiveParts.length > 0;
       const hasCorrective = Array.isArray(p.correctiveParts) && p.correctiveParts.length > 0;
 
+      const rentalWrap = document.createElement("div");
+      rentalWrap.className = "tableWrap";
+
+      const btnRental = document.createElement("button");
+      btnRental.className = "btn btnGhost";
+      btnRental.type = "button";
+      btnRental.textContent = "💸 Valor rental mensual";
+
+      if(hasRental){
+        btnRental.onclick = () => {
+          rentalWrap.classList.toggle("open");
+          btnRental.textContent = rentalWrap.classList.contains("open")
+            ? "▲ Ocultar valor rental"
+            : "💸 Valor rental mensual";
+        };
+        const box = document.createElement("div");
+        box.className = "rentalBox";
+        box.innerHTML = `<b>Valor rental mensual:</b> ${CURRENCY} ${escapeHtml(p.rentalUsd)}`;
+        rentalWrap.appendChild(box);
+        actions.appendChild(btnRental);
+      }
+
       const prevWrap = document.createElement("div");
       prevWrap.className = "tableWrap";
 
@@ -1213,6 +1298,7 @@
 
       card.appendChild(top);
       card.appendChild(actions);
+      if(hasRental) card.appendChild(rentalWrap);
       if(hasPreventive) card.appendChild(prevWrap);
       if(hasCorrective) card.appendChild(corrWrap);
 
@@ -1266,6 +1352,7 @@
   </script>
 </body>
 </html>
+
 
 
 
